@@ -10,6 +10,12 @@ Authors@R:
     comment = c(ORCID = "0000-0002-2834-1195")
   )
   person(
+    "Waring", "David",
+    role = c("aut"),
+    email = "djw64@cornell.edu ",
+    comment = c(ORCID = "0000-0001-9971-9776")
+  )
+  person(
     "Jannink", "Jean-Luc",
     role = c("aut", "cre"),
     email = "jeanluc.work@gmail.com",
