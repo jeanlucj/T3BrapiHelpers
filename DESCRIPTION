@@ -1,0 +1,31 @@
+Package: T3BrapiHelpers
+Type: Package
+Title: Functions To Get Metadata On Trials And Accessions From T3 With BrAPI
+Version: 0.1.0
+Authors@R:
+  person(
+    "Mulderrig", "Timothy",
+    role = c("aut", "cre"),
+    email = "tm639@cornell.edu ",
+    comment = c(ORCID = "0000-0002-2834-1195")
+  )
+  person(
+    "Jannink", "Jean-Luc",
+    role = c("aut", "cre"),
+    email = "jeanluc.work@gmail.com",
+    comment = c(ORCID = "0000-0003-4849-628X")
+  )
+Description: More about what it does (maybe more than one line).
+    Continuation lines should be indented.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    BrAPI,
+    dplyr,
+    httr,
+    janitor,
+    purrr,
+    tibble
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
