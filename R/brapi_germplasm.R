@@ -228,6 +228,7 @@ getGenoProtocolSingleGerm <- function(germ_id, study_id, url){
 #'   \code{germplasmName}, and \code{synonym}.
 #' @param url Base URL for the T3 (or similar) instance, as in
 #'   \code{getGenoProtocolSingleGerm()}.
+#' @param verbose Logical; if \code{TRUE}, display purrr progress bar.
 #'
 #' @return A tibble with one row per germplasm, including genotyping protocol
 #'   IDs and names as list columns.
