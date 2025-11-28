@@ -34,7 +34,6 @@
 #'
 #' makeRowFromTrialResult(tr)
 #'
-#' @export
 makeRowFromTrialResult <- function(tr){
   return(
     tibble::tibble(

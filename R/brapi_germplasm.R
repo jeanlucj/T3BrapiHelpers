@@ -23,7 +23,6 @@
 #'
 #' makeRowFromGermResult(gr, study_id = "study1")
 #'
-#' @export
 makeRowFromGermResult <- function(gr, study_id){
   return(
     data.frame(
@@ -189,14 +188,14 @@ getGenoProtocolSingleGerm <- function(germ_id, study_id, url){
       "categories[]" = "genotyping_protocols"
     ),
     encode = "multipart",
-    httr::timeout(300)
+    httr::timeout(3000)
   )
 
   # Extract the list of protocols
   protocols <- httr::content(response)$list
 
   # Get ALL protocols used to genotype the germplasm
-  # The |> unlist() |> list() manoeuver turns a list of several into a list
+  # The |> unlist() |> list() maneuver turns a list of several into a list
   # with one vector in it.
   if (length(protocols) > 0) {
     protocol_id <- lapply(protocols, function(pl) as.character(pl[[1]])) |>
@@ -237,10 +236,11 @@ getGenoProtocolSingleGerm <- function(germ_id, study_id, url){
 #' @importFrom dplyr bind_rows
 #'
 #' @export
-getGermplasmGenotypeMetaData <- function(all_germ, url) {
+getGermplasmGenotypeMetaData <- function(all_germ, url, verbose=F) {
 
   getForOneRow <- function(studyDbId, germplasmDbId, germplasmName, synonym){
     return(getGenoProtocolSingleGerm(germplasmDbId, studyDbId, url))
   }
-  return(all_germ |> purrr::pmap(getForOneRow) |> dplyr::bind_rows())
+  return(all_germ |> purrr::pmap(getForOneRow) |> dplyr::bind_rows(),
+         .progress=verbose)
 }
