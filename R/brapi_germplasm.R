@@ -63,11 +63,11 @@ makeRowFromGermResult <- function(gr, study_id){
 #' @examples
 #' mock <- mock_brapi_connection()
 #'
-#' germ_df <- getGermplasmSingleStudy("study1", mock)
+#' germ_df <- getGermplasmFromSingleStudy("study1", mock)
 #' germ_df
 #'
 #' @export
-getGermplasmSingleStudy <- function(study_id, brapiConnection, verbose = TRUE){
+getGermplasmFromSingleStudy <- function(study_id, brapiConnection, verbose = TRUE){
   germ_search <- brapiConnection$post(
     "search/germplasm",
     body = list(studyDbIds = study_id)
@@ -124,13 +124,13 @@ getGermplasmSingleStudy <- function(study_id, brapiConnection, verbose = TRUE){
 
 #' Get germplasm metadata for multiple studies
 #'
-#' Wrapper around \code{\link{getGermplasmSingleStudy}} to retrieve and combine
+#' Wrapper around \code{\link{getGermplasmFromSingleStudy}} to retrieve and combine
 #' germplasm metadata for a vector of study IDs.
 #'
 #' @param study_id_vec A character vector of studyDbIds to query.
 #' @param brapiConnection A BrAPI connection object as used in
-#'   \code{getGermplasmSingleStudy()}.
-#' @param verbose Logical; passed on to \code{getGermplasmSingleStudy()} to
+#'   \code{getGermplasmFromSingleStudy()}.
+#' @param verbose Logical; passed on to \code{getGermplasmFromSingleStudy()} to
 #'   control logging.
 #'
 #' @return A data frame obtained by row-binding the results of each study, with
@@ -141,18 +141,19 @@ getGermplasmSingleStudy <- function(study_id, brapiConnection, verbose = TRUE){
 #' @examples
 #' mock <- mock_brapi_connection()
 #'
-#' all_germ <- getGermplasmFromStudies(c("study1", "study2"), mock)
+#' all_germ <- getGermplasmFromStudyVec(c("study1", "study2"), mock)
 #' all_germ
 #'
 #' @export
-getGermplasmFromStudies <- function(study_id_vec, brapiConnection,
+getGermplasmFromStudyVec <- function(study_id_vec, brapiConnection,
                                     verbose = TRUE){
 
-  germMeta_list <- lapply(
+  germMeta_list <- purrr::map(
     study_id_vec,
-    getGermplasmSingleStudy,
+    getGermplasmFromSingleStudy,
     brapiConnection = brapiConnection,
-    verbose = verbose
+    verbose = verbose,
+    .progress = !verbose
   )
 
   return(dplyr::bind_rows(germMeta_list))
@@ -213,7 +214,7 @@ getGermplasmFromStudies <- function(study_id_vec, brapiConnection,
 #'   paste("Called:", paste0(t3url, path))
 #' }
 #'
-#' retry(fake_call, max_tries = 5, wait = 0.2)
+#' retryQuery(fake_call, max_tries = 5, wait = 0.2)
 #'
 #' @keywords internal
 retryQuery <- function(fun, max_tries = 10, wait = 3, silent = TRUE) {
@@ -251,7 +252,7 @@ retryQuery <- function(fun, max_tries = 10, wait = 3, silent = TRUE) {
 #' @importFrom tibble tibble
 #'
 #' @export
-getGenoProtocolSingleGerm <- function(germ_id, study_id, t3url){
+getGenoProtocolFromSingleGerm <- function(germ_id, study_id, t3url){
 
   # API call
   response <- retryQuery(
@@ -307,7 +308,7 @@ getGenoProtocolSingleGerm <- function(germ_id, study_id, t3url){
 #'   contain at least the columns \code{studyDbId}, \code{germplasmDbId},
 #'   \code{germplasmName}, and \code{synonym}.
 #' @param t3url Base URL for the T3 (or similar) instance, as in
-#'   \code{getGenoProtocolSingleGerm()}.
+#'   \code{getGenoProtocolFromSingleGerm()}.
 #' @param verbose Logical; if \code{TRUE}, display purrr progress bar.
 #'
 #' @return A tibble with one row per germplasm, including genotyping protocol
@@ -317,10 +318,10 @@ getGenoProtocolSingleGerm <- function(germ_id, study_id, t3url){
 #' @importFrom dplyr bind_rows
 #'
 #' @export
-getGermplasmGenotypeMetaData <- function(all_germ, t3url, verbose=F) {
+getGenoProtocolFromGermVec <- function(all_germ, t3url, verbose=F) {
 
   getForOneRow <- function(studyDbId, germplasmDbId, germplasmName, synonym){
-    return(getGenoProtocolSingleGerm(germplasmDbId, studyDbId, t3url))
+    return(getGenoProtocolFromSingleGerm(germplasmDbId, studyDbId, t3url))
   }
   return(all_germ |> purrr::pmap(getForOneRow, .progress=verbose) |>
            dplyr::bind_rows())
