@@ -220,7 +220,7 @@ retryQuery <- function(query, max_tries = 10, wait = 3, silent = TRUE) {
 #'
 #' @param germ_id The germplasmDbId for the accession of interest.
 #' @param study_id The studyDbId providing the study context for the germplasm.
-#' @param url Base URL for the T3 (or similar) instance, e.g.
+#' @param t3url Base URL for the T3 (or similar) instance, e.g.
 #'   \code{"https://wheat.triticeaetoolbox.org"}.
 #'
 #' @return A tibble with a single row containing
@@ -232,12 +232,12 @@ retryQuery <- function(query, max_tries = 10, wait = 3, silent = TRUE) {
 #' @importFrom tibble tibble
 #'
 #' @export
-getGenoProtocolSingleGerm <- function(germ_id, study_id, url){
+getGenoProtocolSingleGerm <- function(germ_id, study_id, t3url){
 
   # API call
   response <- retryQuery(
     quote(httr::POST(
-      paste0(url, "/ajax/breeder/search"),
+      paste0(t3url, "/ajax/breeder/search"),
       body = list(
         "categories[]" = "accessions",
         "data[0][]" = germ_id,
@@ -285,7 +285,7 @@ getGenoProtocolSingleGerm <- function(germ_id, study_id, url){
 #' @param all_germ A data frame or tibble of germplasm metadata that must
 #'   contain at least the columns \code{studyDbId}, \code{germplasmDbId},
 #'   \code{germplasmName}, and \code{synonym}.
-#' @param url Base URL for the T3 (or similar) instance, as in
+#' @param t3url Base URL for the T3 (or similar) instance, as in
 #'   \code{getGenoProtocolSingleGerm()}.
 #' @param verbose Logical; if \code{TRUE}, display purrr progress bar.
 #'
@@ -296,10 +296,10 @@ getGenoProtocolSingleGerm <- function(germ_id, study_id, url){
 #' @importFrom dplyr bind_rows
 #'
 #' @export
-getGermplasmGenotypeMetaData <- function(all_germ, url, verbose=F) {
+getGermplasmGenotypeMetaData <- function(all_germ, t3url, verbose=F) {
 
   getForOneRow <- function(studyDbId, germplasmDbId, germplasmName, synonym){
-    return(getGenoProtocolSingleGerm(germplasmDbId, studyDbId, url))
+    return(getGenoProtocolSingleGerm(germplasmDbId, studyDbId, t3url))
   }
   return(all_germ |> purrr::pmap(getForOneRow, .progress=verbose) |>
            dplyr::bind_rows())
