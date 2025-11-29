@@ -158,6 +158,61 @@ getGermplasmFromStudies <- function(study_id_vec, brapiConnection,
   return(dplyr::bind_rows(germMeta_list))
 }
 
+#' Retry an Expression Multiple Times on Error
+#'
+#' `retryQuery()` repeatedly evaluates an expression that may fail (e.g.,
+#' network I/O, timeouts, or API calls). If the expression throws an error, the
+#' function waits a specified number of seconds and tries again, up to a maximum
+#' number of attempts.
+#'
+#' This helper is intended for **internal package use only** and is especially
+#' useful for wrapping fragile operations such as BrAPI queries, `httr` requests,
+#' or file I/O when intermittent failures are likely.
+#'
+#' The function returns the value of the expression as soon as it succeeds
+#' (i.e., does not throw an error). If all attempts fail, `NULL` is returned
+#' invisibly after issuing a final message.
+#'
+#' @param query A quoted R expression (usually wrapped with `quote()`).
+#' @param max_tries Integer. Maximum number of attempts before giving up.
+#' @param wait Numeric. Number of seconds to pause between attempts.
+#' @param silent Logical. Whether to suppress error messages from each failed
+#'   attempt. Default `TRUE`.
+#'
+#' @return The value of `query` if successful; otherwise `NULL` after exhausting
+#'   all attempts.
+#'
+#' @examples
+#' # A failing expression that will succeed on the 3rd try
+#' i <- 0
+#' result <- retryQuery(
+#'   quote({
+#'     i <<- i + 1
+#'     if (i < 3) stop("Temporary failure")
+#'     "Success!"
+#'   }),
+#'   max_tries = 5,
+#'   wait = 0.1
+#' )
+#' result
+#'
+#' @keywords internal
+retryQuery <- function(query, max_tries = 10, wait = 3, silent = TRUE) {
+  for (i in seq_len(max_tries)) {
+    out <- try(eval(query), silent = silent)
+
+    if (!inherits(out, "try-error")) {
+      return(out)
+    }
+
+    message("Attempt ", i, " failed… waiting ", wait, " sec before retry.")
+    Sys.sleep(wait)
+  }
+
+  message("All ", max_tries, " attempts failed.")
+  invisible(NULL)
+}
+
 #' Get genotyping protocol metadata for a single germplasm
 #'
 #' Queries the T3 AJAX interface to determine which genotyping
@@ -180,15 +235,19 @@ getGermplasmFromStudies <- function(study_id_vec, brapiConnection,
 getGenoProtocolSingleGerm <- function(germ_id, study_id, url){
 
   # API call
-  response <- httr::POST(
-    paste0(url, "/ajax/breeder/search"),
-    body = list(
-      "categories[]" = "accessions",
-      "data[0][]" = germ_id,
-      "categories[]" = "genotyping_protocols"
-    ),
-    encode = "multipart",
-    httr::timeout(3000)
+  response <- retryQuery(
+    quote(httr::POST(
+      paste0(url, "/ajax/breeder/search"),
+      body = list(
+        "categories[]" = "accessions",
+        "data[0][]" = germ_id,
+        "categories[]" = "genotyping_protocols"
+      ),
+      encode = "multipart",
+      httr::timeout(3000)
+    )),
+    max_tries = 10,
+    wait = 3
   )
 
   # Extract the list of protocols
@@ -242,6 +301,6 @@ getGermplasmGenotypeMetaData <- function(all_germ, url, verbose=F) {
   getForOneRow <- function(studyDbId, germplasmDbId, germplasmName, synonym){
     return(getGenoProtocolSingleGerm(germplasmDbId, studyDbId, url))
   }
-  return(all_germ |> purrr::pmap(getForOneRow) |> dplyr::bind_rows(),
-         .progress=verbose)
+  return(all_germ |> purrr::pmap(getForOneRow, .progress=verbose) |>
+           dplyr::bind_rows())
 }
