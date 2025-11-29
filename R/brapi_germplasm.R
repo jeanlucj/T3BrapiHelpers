@@ -205,12 +205,12 @@ getGermplasmFromStudies <- function(study_id_vec, brapiConnection,
 #' result
 #'
 #' # Example with an httr call (mocked for illustration)
-#' url <- "https://example.org"
+#' t3url <- "https://example.org"
 #' path <- "/endpoint"
 #'
 #' fake_call <- function() {
 #'   if (runif(1) < 0.7) stop("Simulated flaky network")
-#'   paste("Called:", paste0(url, path))
+#'   paste("Called:", paste0(t3url, path))
 #' }
 #'
 #' retry(fake_call, max_tries = 5, wait = 0.2)
@@ -257,7 +257,7 @@ getGenoProtocolSingleGerm <- function(germ_id, study_id, t3url){
   response <- retryQuery(
     function(){
       httr::POST(
-        paste0(url, "/ajax/breeder/search"),
+        paste0(t3url, "/ajax/breeder/search"),
         body = list(
           "categories[]" = "accessions",
           "data[0][]" = germ_id,
