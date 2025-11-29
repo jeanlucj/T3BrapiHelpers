@@ -4,14 +4,14 @@
 \alias{getGenoProtocolSingleGerm}
 \title{Get genotyping protocol metadata for a single germplasm}
 \usage{
-getGenoProtocolSingleGerm(germ_id, study_id, url)
+getGenoProtocolSingleGerm(germ_id, study_id, t3url)
 }
 \arguments{
 \item{germ_id}{The germplasmDbId for the accession of interest.}
 
 \item{study_id}{The studyDbId providing the study context for the germplasm.}
 
-\item{url}{Base URL for the T3 (or similar) instance, e.g.
+\item{t3url}{Base URL for the T3 (or similar) instance, e.g.
 \code{"https://wheat.triticeaetoolbox.org"}.}
 }
 \value{

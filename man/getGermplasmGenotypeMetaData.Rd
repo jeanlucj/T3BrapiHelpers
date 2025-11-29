@@ -4,14 +4,14 @@
 \alias{getGermplasmGenotypeMetaData}
 \title{Determine genotyping protocol metadata for a set of accessions}
 \usage{
-getGermplasmGenotypeMetaData(all_germ, url, verbose = F)
+getGermplasmGenotypeMetaData(all_germ, t3url, verbose = F)
 }
 \arguments{
 \item{all_germ}{A data frame or tibble of germplasm metadata that must
 contain at least the columns \code{studyDbId}, \code{germplasmDbId},
 \code{germplasmName}, and \code{synonym}.}
 
-\item{url}{Base URL for the T3 (or similar) instance, as in
+\item{t3url}{Base URL for the T3 (or similar) instance, as in
 \code{getGenoProtocolSingleGerm()}.}
 
 \item{verbose}{Logical; if \code{TRUE}, display purrr progress bar.}
