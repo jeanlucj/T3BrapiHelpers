@@ -16,12 +16,12 @@
 #'
 #' @examples
 #' gr <- list(
-#'   germplasmDbId = "G1",
-#'   germplasmName = "Germ1",
+#'   germplasmDbId = "123456",
+#'   germplasmName = "Accession1",
 #'   synonyms = list(list(synonym = "G1-alt"))
 #' )
 #'
-#' makeRowFromGermResult(gr, study_id = "study1")
+#' makeRowFromGermResult(gr, study_id = "12345")
 #'
 makeRowFromGermResult <- function(gr, study_id){
   return(
@@ -39,10 +39,10 @@ makeRowFromGermResult <- function(gr, study_id){
   )
 }
 
-#' Get germplasm metadata for a single study via BrAPI
+#' Get germplasm metadata for a single trial via BrAPI
 #'
-#' Queries the BrAPI \code{/search/germplasm} endpoint for a given study and
-#' returns a data frame of germplasm accessions associated with that study.
+#' Queries the BrAPI \code{/search/germplasm} endpoint for a given trial and
+#' returns a data frame of germplasm accessions associated with that trial
 #' Polling is handled if the search is asynchronous.
 #'
 #' @param study_id A single studyDbId to query germplasm for.
@@ -52,7 +52,7 @@ makeRowFromGermResult <- function(gr, study_id){
 #' @param verbose Logical; if \code{TRUE}, print messages about the retrieval
 #'   process (direct result vs polling, empty results, etc.).
 #'
-#' @return A data frame of germplasm metadata for the given study, with one
+#' @return A data frame of germplasm metadata for the given trial, with one
 #'   row per germplasm. Columns include \code{studyDbId}, \code{germplasmDbId},
 #'   \code{germplasmName}, and \code{synonym}. If no result is found, this
 #'   function may return \code{NULL} or an empty data frame, depending on how
@@ -61,13 +61,13 @@ makeRowFromGermResult <- function(gr, study_id){
 #' @importFrom dplyr bind_rows
 #'
 #' @examples
-#' mock <- mock_brapi_connection()
+#' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
-#' germ_df <- getGermplasmFromSingleStudy("study1", mock)
+#' germ_df <- getGermplasmFromSingleTrial("8128", brapiConn)
 #' germ_df
 #'
 #' @export
-getGermplasmFromSingleStudy <- function(study_id, brapiConnection, verbose = TRUE){
+getGermplasmFromSingleTrial <- function(study_id, brapiConnection, verbose = TRUE){
   germ_search <- brapiConnection$post(
     "search/germplasm",
     body = list(studyDbIds = study_id)
@@ -104,7 +104,7 @@ getGermplasmFromSingleStudy <- function(study_id, brapiConnection, verbose = TRU
 
     germ_result <- all_germ
   } else {
-    if (verbose) message(" → No result found for study: ", study_id)
+    if (verbose) message(" → No result found for trial: ", study_id)
     # Consider returning NULL or an empty data frame here
     return(NULL)
   }
@@ -115,42 +115,42 @@ getGermplasmFromSingleStudy <- function(study_id, brapiConnection, verbose = TRU
       lapply(makeRowFromGermResult, study_id = study_id) |>
       dplyr::bind_rows()
   } else {
-    if (verbose) message(" → Germplasm list was empty for study: ", study_id)
+    if (verbose) message(" → Germplasm list was empty for trial: ", study_id)
     germ_df <- NULL
   }
 
   return(germ_df)
 }
 
-#' Get germplasm metadata for multiple studies
+#' Get germplasm metadata for multiple trials
 #'
-#' Wrapper around \code{\link{getGermplasmFromSingleStudy}} to retrieve and combine
-#' germplasm metadata for a vector of study IDs.
+#' Wrapper around \code{\link{getGermplasmFromSingleTrial}} to retrieve and combine
+#' germplasm metadata for a vector of trial IDs.
 #'
 #' @param study_id_vec A character vector of studyDbIds to query.
 #' @param brapiConnection A BrAPI connection object as used in
-#'   \code{getGermplasmFromSingleStudy()}.
-#' @param verbose Logical; passed on to \code{getGermplasmFromSingleStudy()} to
+#'   \code{getGermplasmFromSingleTrial()}.
+#' @param verbose Logical; passed on to \code{getGermplasmFromSingleTrial()} to
 #'   control logging.
 #'
-#' @return A data frame obtained by row-binding the results of each study, with
-#'   one row per germplasm per study.
+#' @return A data frame obtained by row-binding the results of each trial, with
+#'   one row per germplasm per trial
 #'
 #' @importFrom dplyr bind_rows
 #'
 #' @examples
-#' mock <- mock_brapi_connection()
+#' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
-#' all_germ <- getGermplasmFromStudyVec(c("study1", "study2"), mock)
+#' all_germ <- getGermplasmFromTrialVec(c("8128", "9421"), brapiConn)
 #' all_germ
 #'
 #' @export
-getGermplasmFromStudyVec <- function(study_id_vec, brapiConnection,
+getGermplasmFromTrialVec <- function(study_id_vec, brapiConnection,
                                     verbose = TRUE){
 
   germMeta_list <- purrr::map(
     study_id_vec,
-    getGermplasmFromSingleStudy,
+    getGermplasmFromSingleTrial,
     brapiConnection = brapiConnection,
     verbose = verbose,
     .progress = !verbose
@@ -236,10 +236,10 @@ retryQuery <- function(fun, max_tries = 10, wait = 3, silent = TRUE) {
 #' Get genotyping protocol metadata for a single germplasm
 #'
 #' Queries the T3 AJAX interface to determine which genotyping
-#' protocols have been used for a specific germplasm within a study.
+#' protocols have been used for a specific germplasm within a trial
 #'
 #' @param germ_id The germplasmDbId for the accession of interest.
-#' @param study_id The studyDbId providing the study context for the germplasm.
+#' @param study_id The studyDbId providing the trial context for the germplasm.
 #' @param t3url Base URL for the T3 (or similar) instance, e.g.
 #'   \code{"https://wheat.triticeaetoolbox.org"}.
 #'

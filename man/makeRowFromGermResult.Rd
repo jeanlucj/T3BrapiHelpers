@@ -27,11 +27,11 @@ If synonyms are present, only the first synonym is extracted.
 }
 \examples{
 gr <- list(
-  germplasmDbId = "G1",
-  germplasmName = "Germ1",
+  germplasmDbId = "123456",
+  germplasmName = "Accession1",
   synonyms = list(list(synonym = "G1-alt"))
 )
 
-makeRowFromGermResult(gr, study_id = "study1")
+makeRowFromGermResult(gr, study_id = "12345")
 
 }

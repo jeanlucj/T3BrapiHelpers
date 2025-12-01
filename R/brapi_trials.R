@@ -4,7 +4,7 @@
 #' into a one-row \code{data.frame} with key metadata fields. This is a helper
 #' used by functions that assemble trial metadata tables.
 #'
-#' @param tr A list representing a single study result from a BrAPI
+#' @param tr A list representing a single trial result from a BrAPI
 #'   \code{/studies} endpoint, typically \code{brapiConnection$get("studies/ID")$content$result}.
 #'
 #' @return A one-row \code{data.frame} with columns such as
@@ -19,8 +19,8 @@
 #' @examples
 #' # Create mock trial result
 #' tr <- list(
-#'   studyDbId = "study1",
-#'   studyName = "Mock Study",
+#'   studyDbId = "12345",
+#'   studyName = "Mock Trial",
 #'   studyType = "Yield Trial",
 #'   studyDescription = "Example",
 #'   locationName = "Loc1",
@@ -63,22 +63,22 @@ makeRowFromTrialResult <- function(tr){
 #'   \code{BrAPI::createBrAPIConnection()},
 #'   with \code{$get()} method available.
 #'
-#' @return A tibble-like data frame with one row per study and cleaned column
+#' @return A tibble-like data frame with one row per trial and cleaned column
 #'   names (via \code{janitor::clean_names()}). Date columns \code{start_date}
 #'   and \code{end_date} are converted to \code{POSIXct} in UTC.
 #'
 #' @importFrom dplyr bind_rows mutate
 #' @importFrom janitor clean_names
 #'
-#'#' @examples
-#' mock <- mock_brapi_connection()
+#' @examples
+#' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
-#' # Retrieve mock metadata for two studies
-#' df <- getTrialMetaData(c("study1", "study2"), mock)
+#' # Retrieve mock metadata for two trials
+#' df <- getTrialMetaDataFromStudyVec(c("8128", "9421"), brapiConn)
 #' df
 #'
 #' @export
-getTrialMetaData <- function(study_id_vec, brapiConnection){
+getTrialMetaDataFromTrialVec <- function(study_id_vec, brapiConnection){
 
   getSingleStudy <- function(id){
     return(brapiConnection$get(paste0("studies/", id))$content$result)
@@ -112,18 +112,18 @@ getTrialMetaData <- function(study_id_vec, brapiConnection){
 #' @param cropName A character string giving the BrAPI \code{commonCropName}
 #'   to search for (e.g. \code{"wheat"}).
 #'
-#' @return A tibble-like data frame with one row per study, containing
+#' @return A tibble-like data frame with one row per trial, containing
 #'   standardized trial metadata with cleaned column names and \code{POSIXct}
 #'   \code{start_date} and \code{end_date} columns.
 #'
 #' @importFrom dplyr bind_rows mutate
 #' @importFrom janitor clean_names
 #'
-#'#' @examples
-#' mock <- mock_brapi_connection()
+#' @examples
+#' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
 #' # Retrieve mock trial metadata for "wheat"
-#' all_trials <- getAllTrialMetaData(mock, "wheat")
+#' all_trials <- getAllTrialMetaData(brapiConn, "Wheat")
 #' all_trials
 #'
 #' @export
@@ -165,4 +165,37 @@ getAllTrialMetaData <- function(brapiConnection, cropName){
     janitor::clean_names()
 
   return(trials_df)
+}
+
+#' Retrieve what traits were measured for a set of trials by study IDs
+#'
+#' Given a vector of BrAPI study IDs, use the wizard function of a Breedbase
+#' connection to compile a vector of all traits measured in at least one trial
+#'
+#' @param study_id_vec A character vector of BrAPI study IDs (studyDbId values)
+#'   to query.
+#' @param brapiConnection A BrAPI connection object, typically created by
+#'   \code{BrAPI::createBrAPIConnection()},
+#'   with \code{$get()} method available.
+#' @param namesOrIds A string. If "names" return the names of the traits else
+#' return the trait DB IDs.
+#'
+#' @return A vector of either trait names or trait DB IDs.
+#'
+#' @importFrom dplyr if_else
+#'
+#' @examples
+#' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+#'
+#' traits <- getTraitsFromTrialVec(c("8128", "9421"), brapiConn)
+#' traits
+#'
+#' @export
+getTraitsFromTrialVec <- function(study_db_id, brapiConnection,
+                                  namesOrIds="names"){
+  traitList <- brapiConnection$wizard("traits", filter=list(trials=study_db_id))
+  traitList <- traitList$content[[1]]
+  namesOrIds <- dplyr::if_else(namesOrIds == "names", 2, 1)
+  traits <- sapply(traitList, function(tl) return(tl[[namesOrIds]]))
+  return(traits)
 }

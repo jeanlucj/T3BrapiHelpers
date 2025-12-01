@@ -68,7 +68,7 @@ fake_call <- function() {
   paste("Called:", paste0(t3url, path))
 }
 
-retry(fake_call, max_tries = 5, wait = 0.2)
+retryQuery(fake_call, max_tries = 5, wait = 0.2)
 
 }
 \keyword{internal}

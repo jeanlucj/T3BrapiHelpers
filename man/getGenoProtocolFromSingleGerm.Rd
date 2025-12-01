@@ -9,7 +9,7 @@ getGenoProtocolFromSingleGerm(germ_id, study_id, t3url)
 \arguments{
 \item{germ_id}{The germplasmDbId for the accession of interest.}
 
-\item{study_id}{The studyDbId providing the study context for the germplasm.}
+\item{study_id}{The studyDbId providing the trial context for the germplasm.}
 
 \item{t3url}{Base URL for the T3 (or similar) instance, e.g.
 \code{"https://wheat.triticeaetoolbox.org"}.}
@@ -22,5 +22,5 @@ columns, potentially containing multiple protocol IDs/names.
 }
 \description{
 Queries the T3 AJAX interface to determine which genotyping
-protocols have been used for a specific germplasm within a study.
+protocols have been used for a specific germplasm within a trial
 }

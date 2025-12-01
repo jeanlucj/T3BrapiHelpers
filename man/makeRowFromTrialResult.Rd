@@ -7,7 +7,7 @@
 makeRowFromTrialResult(tr)
 }
 \arguments{
-\item{tr}{A list representing a single study result from a BrAPI
+\item{tr}{A list representing a single trial result from a BrAPI
 \code{/studies} endpoint, typically \code{brapiConnection$get("studies/ID")$content$result}.}
 }
 \value{
@@ -29,8 +29,8 @@ in the calling environment to replace \code{NULL} with \code{NA}.
 \examples{
 # Create mock trial result
 tr <- list(
-  studyDbId = "study1",
-  studyName = "Mock Study",
+  studyDbId = "12345",
+  studyName = "Mock Trial",
   studyType = "Yield Trial",
   studyDescription = "Example",
   locationName = "Loc1",

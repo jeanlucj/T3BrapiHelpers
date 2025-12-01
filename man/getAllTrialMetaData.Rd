@@ -15,7 +15,7 @@ with \code{$get()} and \code{$post()} methods available.}
 to search for (e.g. \code{"wheat"}).}
 }
 \value{
-A tibble-like data frame with one row per study, containing
+A tibble-like data frame with one row per trial, containing
 standardized trial metadata with cleaned column names and \code{POSIXct}
 \code{start_date} and \code{end_date} columns.
 }
@@ -23,4 +23,12 @@ standardized trial metadata with cleaned column names and \code{POSIXct}
 Queries the BrAPI \code{/search/studies} endpoint for all studies matching
 a given common crop name, handles polling if needed, and compiles the
 results into a trial metadata data frame.
+}
+\examples{
+brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+
+# Retrieve mock trial metadata for "wheat"
+all_trials <- getAllTrialMetaData(brapiConn, "Wheat")
+all_trials
+
 }
