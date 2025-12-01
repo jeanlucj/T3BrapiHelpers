@@ -26,7 +26,7 @@ endpoint for each and compile a tidy data frame of trial metadata.
 \examples{
 brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
-# Retrieve mock metadata for two trials
+# Retrieve metadata for two trials
 df <- getTrialMetaDataFromStudyVec(c("8128", "9421"), brapiConn)
 df
 

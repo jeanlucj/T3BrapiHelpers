@@ -17,10 +17,10 @@
 #'   in the calling environment to replace \code{NULL} with \code{NA}.
 #'
 #' @examples
-#' # Create mock trial result
+#' # Create fake trial result
 #' tr <- list(
 #'   studyDbId = "12345",
-#'   studyName = "Mock Trial",
+#'   studyName = "Fake Trial",
 #'   studyType = "Yield Trial",
 #'   studyDescription = "Example",
 #'   locationName = "Loc1",
@@ -73,7 +73,7 @@ makeRowFromTrialResult <- function(tr){
 #' @examples
 #' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
-#' # Retrieve mock metadata for two trials
+#' # Retrieve metadata for two trials
 #' df <- getTrialMetaDataFromStudyVec(c("8128", "9421"), brapiConn)
 #' df
 #'
@@ -122,7 +122,7 @@ getTrialMetaDataFromTrialVec <- function(study_id_vec, brapiConnection){
 #' @examples
 #' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
-#' # Retrieve mock trial metadata for "wheat"
+#' # Retrieve trial metadata for "Wheat"
 #' all_trials <- getAllTrialMetaData(brapiConn, "Wheat")
 #' all_trials
 #'

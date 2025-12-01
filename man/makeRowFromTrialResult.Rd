@@ -27,10 +27,10 @@ This function assumes the infix operator \code{\%||\%} is available
 in the calling environment to replace \code{NULL} with \code{NA}.
 }
 \examples{
-# Create mock trial result
+# Create fake trial result
 tr <- list(
   studyDbId = "12345",
-  studyName = "Mock Trial",
+  studyName = "Fake Trial",
   studyType = "Yield Trial",
   studyDescription = "Example",
   locationName = "Loc1",

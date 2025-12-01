@@ -59,7 +59,7 @@ result <- retry(
 )
 result
 
-# Example with an httr call (mocked for illustration)
+# Example with an httr call (fake for illustration)
 t3url <- "https://example.org"
 path <- "/endpoint"
 

@@ -27,7 +27,7 @@ results into a trial metadata data frame.
 \examples{
 brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
-# Retrieve mock trial metadata for "wheat"
+# Retrieve trial metadata for "Wheat"
 all_trials <- getAllTrialMetaData(brapiConn, "Wheat")
 all_trials
 
