@@ -4,17 +4,17 @@
 \alias{getGenoProtocolFromGermVec}
 \title{Determine genotyping protocol metadata for a set of accessions}
 \usage{
-getGenoProtocolFromGermVec(all_germ, t3url, verbose = F)
+getGenoProtocolFromGermVec(germ_id_vec, t3url, verbose = F)
 }
 \arguments{
-\item{all_germ}{A data frame or tibble of germplasm metadata that must
-contain at least the columns \code{studyDbId}, \code{germplasmDbId},
-\code{germplasmName}, and \code{synonym}.}
-
 \item{t3url}{Base URL for the T3 (or similar) instance, as in
 \code{getGenoProtocolFromSingleGerm()}.}
 
-\item{verbose}{Logical; if \code{TRUE}, display purrr progress bar.}
+\item{verbose}{Logical; if \code{FALSE} (default), display purrr progress bar
+else print for each \code{germplasmDbId}}
+
+\item{all_germ}{A data frame or tibble of germplasm metadata that must
+contain at least the column \code{germplasmDbId}.}
 }
 \value{
 A tibble with one row per germplasm, including genotyping protocol

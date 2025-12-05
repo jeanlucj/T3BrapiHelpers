@@ -4,7 +4,7 @@
 \alias{getGermplasmFromTrialVec}
 \title{Get germplasm metadata for multiple trials}
 \usage{
-getGermplasmFromTrialVec(study_id_vec, brapiConnection, verbose = TRUE)
+getGermplasmFromTrialVec(study_id_vec, brapiConnection, verbose = F)
 }
 \arguments{
 \item{study_id_vec}{A character vector of studyDbIds to query.}
@@ -13,7 +13,7 @@ getGermplasmFromTrialVec(study_id_vec, brapiConnection, verbose = TRUE)
 \code{getGermplasmFromSingleTrial()}.}
 
 \item{verbose}{Logical; passed on to \code{getGermplasmFromSingleTrial()} to
-control logging.}
+control logging. If FALSE display purrr progress bar}
 }
 \value{
 A data frame obtained by row-binding the results of each trial, with

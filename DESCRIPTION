@@ -1,7 +1,7 @@
 Package: T3BrapiHelpers
 Type: Package
 Title: Functions To Get Metadata On Trials And Accessions From T3 With BrAPI
-Version: 0.1.12
+Version: 0.1.14
 Authors@R:
   person(
     "Mulderrig", "Timothy",
@@ -35,3 +35,7 @@ Imports:
     tibble
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

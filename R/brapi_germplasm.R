@@ -47,8 +47,7 @@ makeRowFromGermResult <- function(gr, study_id){
 #'
 #' @param study_id A single studyDbId to query germplasm for.
 #' @param brapiConnection A BrAPI connection object, typically from
-#'   \code{BrAPI::createBrAPIConnection()},
-#'   with \code{$post()} and \code{$get()} methods.
+#'   \code{BrAPI::createBrAPIConnection()}, with a \code{$search()} method.
 #' @param verbose Logical; if \code{TRUE}, print messages about the retrieval
 #'   process (direct result vs polling, empty results, etc.).
 #'
@@ -67,59 +66,22 @@ makeRowFromGermResult <- function(gr, study_id){
 #' germ_df
 #'
 #' @export
-getGermplasmFromSingleTrial <- function(study_id, brapiConnection, verbose = TRUE){
-  germ_search <- brapiConnection$post(
-    "search/germplasm",
-    body = list(studyDbIds = study_id)
-  )
+getGermplasmFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
 
-  # Check if polling is needed
-  result_data <- germ_search$content$result$data
-
-  if (!is.null(result_data)) {
-    if (verbose) message(" → Got direct result (no polling)")
-    germ_result <- result_data
-  } else if (!is.null(germ_search$content$result$searchResultsDbId)) {
-    if (verbose) message(" → Polling for result")
-
-    germ_search_id <- germ_search$content$result$searchResultsDbId
-    page <- 0
-    pageSize <- 1000
-    all_germ <- list()
-
-    repeat {
-      germ_response <- brapiConnection$get(
-        paste0("search/germplasm/", germ_search_id),
-        page = page,
-        pageSize = pageSize
-      )
-
-      this_page <- germ_response$content$result$data
-
-      if (length(this_page) == 0) break
-
-      all_germ <- c(all_germ, this_page)
-      page <- page + 1
-    }
-
-    germ_result <- all_germ
-  } else {
-    if (verbose) message(" → No result found for trial: ", study_id)
-    # Consider returning NULL or an empty data frame here
-    return(NULL)
+  get_fields_from_data <- function(data_list){
+    if (verbose) cat("Retrieved metadata on", data_list$germplasmName, "\n")
+    return(tibble(germplasmDbId=data_list$germplasmDbId,
+                  germplasmName=data_list$germplasmName,
+                  synonyms=data_list$synonyms |> unlist() |> list(),
+                  pedigree=data_list$pedigree))
   }
 
-  # Build data frame
-  if (length(germ_result) > 0) {
-    germ_df <- germ_result |>
-      lapply(makeRowFromGermResult, study_id = study_id) |>
-      dplyr::bind_rows()
-  } else {
-    if (verbose) message(" → Germplasm list was empty for trial: ", study_id)
-    germ_df <- NULL
-  }
+  search_result <- brapiConnection$search("germplasm",
+                                          body = list(studyDbIds = study_id))
 
-  return(germ_df)
+  # Make a data.frame from the combined data
+  return(lapply(search_result$combined_data, get_fields_from_data) |>
+           bind_rows())
 }
 
 #' Get germplasm metadata for multiple trials
@@ -131,7 +93,7 @@ getGermplasmFromSingleTrial <- function(study_id, brapiConnection, verbose = TRU
 #' @param brapiConnection A BrAPI connection object as used in
 #'   \code{getGermplasmFromSingleTrial()}.
 #' @param verbose Logical; passed on to \code{getGermplasmFromSingleTrial()} to
-#'   control logging.
+#'   control logging. If FALSE display purrr progress bar
 #'
 #' @return A data frame obtained by row-binding the results of each trial, with
 #'   one row per germplasm per trial
@@ -145,8 +107,7 @@ getGermplasmFromSingleTrial <- function(study_id, brapiConnection, verbose = TRU
 #' all_germ
 #'
 #' @export
-getGermplasmFromTrialVec <- function(study_id_vec, brapiConnection,
-                                    verbose = TRUE){
+getGermplasmFromTrialVec <- function(study_id_vec, brapiConnection, verbose=F){
 
   germMeta_list <- purrr::map(
     study_id_vec,
@@ -239,41 +200,27 @@ retryQuery <- function(fun, max_tries = 10, wait = 3, silent = TRUE) {
 #' protocols have been used for a specific germplasm within a trial
 #'
 #' @param germ_id The germplasmDbId for the accession of interest.
-#' @param study_id The studyDbId providing the trial context for the germplasm.
 #' @param t3url Base URL for the T3 (or similar) instance, e.g.
 #'   \code{"https://wheat.triticeaetoolbox.org"}.
 #'
 #' @return A tibble with a single row containing
-#'   \code{studyDbId}, \code{germplasmDbId}, \code{genoProtocolDbId},
-#'   and \code{genoProtocolName}. The genotyping protocol columns are list
-#'   columns, potentially containing multiple protocol IDs/names.
+#'   \code{germplasmDbId}, \code{genoProtocolDbId}, and \code{genoProtocolName}.
+#'   The genotyping protocol columns are list columns, potentially containing
+#'   multiple protocol IDs/names.
 #'
 #' @importFrom httr POST content timeout
 #' @importFrom tibble tibble
 #'
 #' @export
-getGenoProtocolFromSingleGerm <- function(germ_id, study_id, t3url){
+getGenoProtocolFromSingleGerm <- function(germ_id, t3url, verbose=F){
 
-  # API call
-  response <- retryQuery(
-    function(){
-      httr::POST(
-        paste0(t3url, "/ajax/breeder/search"),
-        body = list(
-          "categories[]" = "accessions",
-          "data[0][]" = germ_id,
-          "categories[]" = "genotyping_protocols"
-        ),
-        encode = "multipart",
-        httr::timeout(3000)
-      )
-    },
-    max_tries = 10,
-    wait = 3
-  )
+  if (verbose){
+    cat("Getting genotyping protocols for germplasmDbId", germ_id, "\n")
+  }
 
-  # Extract the list of protocols
-  protocols <- httr::content(response)$list
+  protocols <- brapiConnection$wizard("genotyping_protocols",
+                                      list(accessions=germ_id))
+  protocols <- protocols$content$list
 
   # Get ALL protocols used to genotype the germplasm
   # The |> unlist() |> list() maneuver turns a list of several into a list
@@ -289,7 +236,6 @@ getGenoProtocolFromSingleGerm <- function(germ_id, study_id, t3url){
   }
 
   this_row <- tibble::tibble(
-    studyDbId = study_id,
     germplasmDbId = germ_id,
     genoProtocolDbId = protocol_id,
     genoProtocolName = protocol_name
@@ -305,24 +251,25 @@ getGenoProtocolFromSingleGerm <- function(germ_id, study_id, t3url){
 #' return a combined tibble.
 #'
 #' @param all_germ A data frame or tibble of germplasm metadata that must
-#'   contain at least the columns \code{studyDbId}, \code{germplasmDbId},
-#'   \code{germplasmName}, and \code{synonym}.
+#'   contain at least the column \code{germplasmDbId}.
 #' @param t3url Base URL for the T3 (or similar) instance, as in
 #'   \code{getGenoProtocolFromSingleGerm()}.
-#' @param verbose Logical; if \code{TRUE}, display purrr progress bar.
+#' @param verbose Logical; if \code{FALSE} (default), display purrr progress bar
+#'   else print for each \code{germplasmDbId}
 #'
 #' @return A tibble with one row per germplasm, including genotyping protocol
 #'   IDs and names as list columns.
 #'
-#' @importFrom purrr pmap
+#' @importFrom purrr map
 #' @importFrom dplyr bind_rows
 #'
 #' @export
-getGenoProtocolFromGermVec <- function(all_germ, t3url, verbose=F) {
+getGenoProtocolFromGermVec <- function(germ_id_vec, t3url, verbose=F) {
 
-  getForOneRow <- function(studyDbId, germplasmDbId, germplasmName, synonym){
-    return(getGenoProtocolFromSingleGerm(germplasmDbId, studyDbId, t3url))
-  }
-  return(all_germ |> purrr::pmap(getForOneRow, .progress=verbose) |>
+  return(purrr::map(germ_id_vec,
+                    getGenoProtocolFromSingleGerm,
+                    t3url=t3url,
+                    verbose=verbose,
+                    .progress=!verbose) |>
            dplyr::bind_rows())
 }

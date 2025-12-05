@@ -4,14 +4,13 @@
 \alias{getGermplasmFromSingleTrial}
 \title{Get germplasm metadata for a single trial via BrAPI}
 \usage{
-getGermplasmFromSingleTrial(study_id, brapiConnection, verbose = TRUE)
+getGermplasmFromSingleTrial(study_id, brapiConnection, verbose = F)
 }
 \arguments{
 \item{study_id}{A single studyDbId to query germplasm for.}
 
 \item{brapiConnection}{A BrAPI connection object, typically from
-\code{BrAPI::createBrAPIConnection()},
-with \code{$post()} and \code{$get()} methods.}
+\code{BrAPI::createBrAPIConnection()}, with a \code{$search()} method.}
 
 \item{verbose}{Logical; if \code{TRUE}, print messages about the retrieval
 process (direct result vs polling, empty results, etc.).}
