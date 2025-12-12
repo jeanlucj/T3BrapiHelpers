@@ -169,8 +169,9 @@ getAllTrialMetaData <- function(brapiConnection, cropName){
 
 #' Retrieve what traits were measured for a set of trials by study IDs
 #'
-#' Given a vector of BrAPI study IDs, use the wizard function of a Breedbase
-#' connection to compile a vector of all traits measured in at least one trial
+#' Given a vector of BrAPI study IDs, use the search function of a Breedbase
+#' connection to compile a vector of all traits measured in each trial in the
+#' study_id_vec
 #'
 #' @param study_id_vec A character vector of BrAPI study IDs (studyDbId values)
 #'   to query.
@@ -178,7 +179,9 @@ getAllTrialMetaData <- function(brapiConnection, cropName){
 #'   \code{BrAPI::createBrAPIConnection()},
 #'   with \code{$get()} method available.
 #' @param namesOrIds A string. If "names" return the names of the traits else
-#' return the trait DB IDs.
+#'   return the trait DB IDs.
+#' @param verbose A logical. If TRUE a lot of info on the traits in the studies
+#'   else a purrr progress bar
 #'
 #' @return A vector of either trait names or trait DB IDs.
 #'
@@ -191,11 +194,61 @@ getAllTrialMetaData <- function(brapiConnection, cropName){
 #' traits
 #'
 #' @export
-getTraitsFromTrialVec <- function(study_db_id, brapiConnection,
-                                  namesOrIds="names"){
-  traitList <- brapiConnection$wizard("traits", filter=list(trials=study_db_id))
-  traitList <- traitList$content[[1]]
-  namesOrIds <- dplyr::if_else(namesOrIds == "names", 2, 1)
-  traits <- sapply(traitList, function(tl) return(tl[[namesOrIds]]))
-  return(traits)
+getTraitsFromTrialVec <- function(study_id_vec, brapiConnection,
+                                  namesOrIds="names", verbose=F){
+  # make tibbles with names and ids for traits in each study
+  trialTraitsList <- purrr::map(study_id_vec,
+                                getTraitsFromSingleTrial,
+                                brapiConnection=brapiConnection,
+                                verbose=verbose,
+                                .progress=!verbose)
+  # Compile a tibble with either names or ids in one cell
+  namesOrIds <- ifelse(namesOrIds == "names", 2, 1)
+  makeStudyIDrow <- function(idx){
+    return(tibble(study_id=study_id_vec[idx],
+                  traits=list(trialTraitsList[[idx]][, namesOrIds])))
+  }
+  return(lapply(1:length(study_id_vec), makeStudyIDrow) |> dplyr::bind_rows())
+}
+
+#' Get traits measured from a single trial via BrAPI
+#'
+#' Queries the BrAPI \code{/search/variables} endpoint for a given trial and
+#' returns a data frame of traits and their DbIds measured in that trial
+#'
+#' @param study_id A single studyDbId to query germplasm for.
+#' @param brapiConnection A BrAPI connection object, typically from
+#'   \code{BrAPI::createBrAPIConnection()}, with a \code{$search()} method.
+#' @param verbose Logical; if \code{TRUE}, print messages about the retrieval
+#'   process.
+#'
+#' @return A data frame of traits for the given trial, with one row per trait
+#'   Columns include \code{observationVariableDbId} and
+#'   \code{observationVariableName}. If no result is found, not sure what
+#'   happens...
+#'
+#' @importFrom dplyr bind_rows
+#'
+#' @examples
+#' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+#'
+#' traits_df <- getTraitsFromSingleTrial("8128", brapiConn)
+#' traits_df
+#'
+#' @export
+getTraitsFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
+
+  get_fields_from_data <- function(data_list){
+    if (verbose) cat("Retrieved metadata on",
+                     data_list$observationVariableName, "\n")
+    return(tibble(observationVariableDbId=data_list$observationVariableDbId,
+                  observationVariableName=data_list$observationVariableName))
+  }
+
+  search_result <- brapiConnection$search("variables",
+                                          body = list(studyDbIds = study_id))
+
+  # Make a data.frame from the combined data
+  return(lapply(search_result$combined_data, get_fields_from_data) |>
+           dplyr::bind_rows())
 }
