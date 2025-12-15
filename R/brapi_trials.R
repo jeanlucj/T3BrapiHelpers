@@ -83,7 +83,9 @@ getTrialMetaDataFromTrialVec <- function(study_id_vec, brapiConnection){
   getSingleStudy <- function(id){
     return(brapiConnection$get(paste0("studies/", id))$content$result)
   }
+
   trials_list <- lapply(study_id_vec, getSingleStudy)
+
   trials_df <- trials_list |>
     lapply(makeRowFromTrialResult) |>
     dplyr::bind_rows() |>
@@ -108,7 +110,7 @@ getTrialMetaDataFromTrialVec <- function(study_id_vec, brapiConnection){
 #'
 #' @param brapiConnection A BrAPI connection object, typically created by
 #'   \code{BrAPI::createBrAPIConnection()},
-#'   with \code{$get()} and \code{$post()} methods available.
+#'   with \code{$search()} method available.
 #' @param cropName A character string giving the BrAPI \code{commonCropName}
 #'   to search for (e.g. \code{"wheat"}).
 #'
@@ -130,28 +132,13 @@ getTrialMetaDataFromTrialVec <- function(study_id_vec, brapiConnection){
 getAllTrialMetaData <- function(brapiConnection, cropName){
 
   ## pull list of all trials from T3
-  trials_search <- brapiConnection$post(
+  trials_search <- brapiConnection$search(
     "search/studies",
     body = list(commonCropNames = cropName)
   )
 
-  # Check if immediate data is available
-  if (!is.null(trials_search$content$result$data)){
-    trials_result <- trials_search$content$result$data
-  } else{
-    # Otherwise, get the searchResultsDbId and poll the results
-    search_id <- trials_search$content$result$searchResultsDbId
-
-    trials_result_response <- brapiConnection$get(
-      paste0("search/studies/", search_id),
-      pageSize = 10000
-    )
-
-    trials_result <- trials_result_response$content$result$data
-  }
-
   # Compile the BrAPI results into a data frame
-  trials_df <- trials_result |>
+  trials_df <- trials_search$combined_data |>
     lapply(makeRowFromTrialResult) |>
     dplyr::bind_rows() |>
     dplyr::mutate(
@@ -176,8 +163,7 @@ getAllTrialMetaData <- function(brapiConnection, cropName){
 #' @param study_id_vec A character vector of BrAPI study IDs (studyDbId values)
 #'   to query.
 #' @param brapiConnection A BrAPI connection object, typically created by
-#'   \code{BrAPI::createBrAPIConnection()},
-#'   with \code{$get()} method available.
+#'   \code{BrAPI::createBrAPIConnection()}, with \code{$search()} method.
 #' @param namesOrIds A string. If "names" return the names of the traits else
 #'   return the trait DB IDs.
 #' @param verbose A logical. If TRUE a lot of info on the traits in the studies

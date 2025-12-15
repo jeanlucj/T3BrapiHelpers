@@ -4,13 +4,13 @@
 \alias{getGenoProtocolFromSingleGerm}
 \title{Get genotyping protocol metadata for a single germplasm}
 \usage{
-getGenoProtocolFromSingleGerm(germ_id, t3url, verbose = F)
+getGenoProtocolFromSingleGerm(germ_id, brapiConnection, verbose = F)
 }
 \arguments{
 \item{germ_id}{The germplasmDbId for the accession of interest.}
 
-\item{t3url}{Base URL for the T3 (or similar) instance, e.g.
-\code{"https://wheat.triticeaetoolbox.org"}.}
+\item{brapiConnection}{A BrAPI connection object, typically from
+\code{BrAPI::createBrAPIConnection()}, with a \code{$wizard()} method.}
 }
 \value{
 A tibble with a single row containing
@@ -19,6 +19,14 @@ The genotyping protocol columns are list columns, potentially containing
 multiple protocol IDs/names.
 }
 \description{
-Queries the T3 AJAX interface to determine which genotyping
-protocols have been used for a specific germplasm within a trial
+Queries the T3 AJAX interface using the \code{$wizard()} method of a
+brapiConnection to determine which genotyping protocols have been used for a
+specific germplasm
+}
+\examples{
+brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+
+winner_geno_protocols <- getGenoProtocolFromGermVec("1284387", brapiConn)
+winner_geno_protocols
+
 }

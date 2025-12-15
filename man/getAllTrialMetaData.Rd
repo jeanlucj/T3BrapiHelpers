@@ -9,7 +9,7 @@ getAllTrialMetaData(brapiConnection, cropName)
 \arguments{
 \item{brapiConnection}{A BrAPI connection object, typically created by
 \code{BrAPI::createBrAPIConnection()},
-with \code{$get()} and \code{$post()} methods available.}
+with \code{$search()} method available.}
 
 \item{cropName}{A character string giving the BrAPI \code{commonCropName}
 to search for (e.g. \code{"wheat"}).}

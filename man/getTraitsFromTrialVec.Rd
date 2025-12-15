@@ -4,25 +4,33 @@
 \alias{getTraitsFromTrialVec}
 \title{Retrieve what traits were measured for a set of trials by study IDs}
 \usage{
-getTraitsFromTrialVec(study_db_id, brapiConnection, namesOrIds = "names")
+getTraitsFromTrialVec(
+  study_id_vec,
+  brapiConnection,
+  namesOrIds = "names",
+  verbose = F
+)
 }
 \arguments{
+\item{study_id_vec}{A character vector of BrAPI study IDs (studyDbId values)
+to query.}
+
 \item{brapiConnection}{A BrAPI connection object, typically created by
-\code{BrAPI::createBrAPIConnection()},
-with \code{$get()} method available.}
+\code{BrAPI::createBrAPIConnection()}, with \code{$search()} method.}
 
 \item{namesOrIds}{A string. If "names" return the names of the traits else
 return the trait DB IDs.}
 
-\item{study_id_vec}{A character vector of BrAPI study IDs (studyDbId values)
-to query.}
+\item{verbose}{A logical. If TRUE a lot of info on the traits in the studies
+else a purrr progress bar}
 }
 \value{
 A vector of either trait names or trait DB IDs.
 }
 \description{
-Given a vector of BrAPI study IDs, use the wizard function of a Breedbase
-connection to compile a vector of all traits measured in at least one trial
+Given a vector of BrAPI study IDs, use the search function of a Breedbase
+connection to compile a vector of all traits measured in each trial in the
+study_id_vec
 }
 \examples{
 brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)

@@ -13,19 +13,17 @@ getGermplasmFromSingleTrial(study_id, brapiConnection, verbose = F)
 \code{BrAPI::createBrAPIConnection()}, with a \code{$search()} method.}
 
 \item{verbose}{Logical; if \code{TRUE}, print messages about the retrieval
-process (direct result vs polling, empty results, etc.).}
+process.}
 }
 \value{
 A data frame of germplasm metadata for the given trial, with one
 row per germplasm. Columns include \code{studyDbId}, \code{germplasmDbId},
-\code{germplasmName}, and \code{synonym}. If no result is found, this
-function may return \code{NULL} or an empty data frame, depending on how
-you choose to handle that case.
+\code{germplasmName}, and \code{synonym}. If no result is found, not sure
+what happens.
 }
 \description{
 Queries the BrAPI \code{/search/germplasm} endpoint for a given trial and
 returns a data frame of germplasm accessions associated with that trial
-Polling is handled if the search is asynchronous.
 }
 \examples{
 brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)

@@ -10,9 +10,8 @@ anytime it's in a plain English context.  At least, that's the idea.
 2. getTraitsFromTrialVec: submit a vector of trials and get back what traits 
 were evaluated in those trials
 
-In Progress.  There is a function that uses the wizard feature.  I would prefer
-it to use straight BrAPI calls but 1. I don't know how to do that.  Also there
-should be an option to do this by trial resulting in a tibble response.
+DONE. The response is a two column tibble with the second column being a one
+column tibble with all of the trait names or DbIds.
 
 3. combingGenomicRelationshipMatrices: not sure how this will work. Will model
 it on what Tim has done
@@ -22,3 +21,8 @@ connections to the wheat-sandbox.
 
 DONE.  I think more examples could be given.  Earlier I eliminated some examples
 because the mock brapi connection that ChatGPT invented didn't work.
+
+5. getLatLongFromTrialVec: submit a vector of trials and get back their 
+lattitude and longitude.  Or maybe just add this to the metadata when you use
+a getTrialMetadata function.
+

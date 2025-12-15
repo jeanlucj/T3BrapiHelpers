@@ -4,24 +4,29 @@
 \alias{getGenoProtocolFromGermVec}
 \title{Determine genotyping protocol metadata for a set of accessions}
 \usage{
-getGenoProtocolFromGermVec(germ_id_vec, t3url, verbose = F)
+getGenoProtocolFromGermVec(germ_id_vec, brapiConnection, verbose = F)
 }
 \arguments{
-\item{t3url}{Base URL for the T3 (or similar) instance, as in
-\code{getGenoProtocolFromSingleGerm()}.}
+\item{germ_id_vec}{A vector of germplasm DbIds.}
+
+\item{brapiConnection}{A BrAPI connection object, typically from
+\code{BrAPI::createBrAPIConnection()}, with a \code{$wizard()} method.}
 
 \item{verbose}{Logical; if \code{FALSE} (default), display purrr progress bar
 else print for each \code{germplasmDbId}}
-
-\item{all_germ}{A data frame or tibble of germplasm metadata that must
-contain at least the column \code{germplasmDbId}.}
 }
 \value{
 A tibble with one row per germplasm, including genotyping protocol
 IDs and names as list columns.
 }
 \description{
-For each germplasm in a data frame of germplasm metadata, query the T3
-AJAX interface to determine which genotyping protocols were used, and
-return a combined tibble.
+Wrapper for getGenoProtocolFromSingleGerm.
+}
+\examples{
+brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+
+germ_geno_protocols <- getGenoProtocolFromGermVec(
+  c("1284387", "1382716", "1415479"), brapiConn)
+germ_geno_protocols
+
 }

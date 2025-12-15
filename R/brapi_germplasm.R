@@ -194,12 +194,13 @@ retryQuery <- function(fun, max_tries = 10, wait = 3, silent = TRUE) {
 
 #' Get genotyping protocol metadata for a single germplasm
 #'
-#' Queries the T3 AJAX interface to determine which genotyping
-#' protocols have been used for a specific germplasm within a trial
+#' Queries the T3 AJAX interface using the \code{$wizard()} method of a
+#' brapiConnection to determine which genotyping protocols have been used for a
+#' specific germplasm
 #'
 #' @param germ_id The germplasmDbId for the accession of interest.
-#' @param t3url Base URL for the T3 (or similar) instance, e.g.
-#'   \code{"https://wheat.triticeaetoolbox.org"}.
+#' @param brapiConnection A BrAPI connection object, typically from
+#'   \code{BrAPI::createBrAPIConnection()}, with a \code{$wizard()} method.
 #'
 #' @return A tibble with a single row containing
 #'   \code{germplasmDbId}, \code{genoProtocolDbId}, and \code{genoProtocolName}.
@@ -209,8 +210,14 @@ retryQuery <- function(fun, max_tries = 10, wait = 3, silent = TRUE) {
 #' @importFrom httr POST content timeout
 #' @importFrom tibble tibble
 #'
+#' @examples
+#' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+#'
+#' winner_geno_protocols <- getGenoProtocolFromGermVec("1284387", brapiConn)
+#' winner_geno_protocols
+#'
 #' @export
-getGenoProtocolFromSingleGerm <- function(germ_id, t3url, verbose=F){
+getGenoProtocolFromSingleGerm <- function(germ_id, brapiConnection, verbose=F){
 
   if (verbose){
     cat("Getting genotyping protocols for germplasmDbId", germ_id, "\n")
@@ -244,14 +251,11 @@ getGenoProtocolFromSingleGerm <- function(germ_id, t3url, verbose=F){
 
 #' Determine genotyping protocol metadata for a set of accessions
 #'
-#' For each germplasm in a data frame of germplasm metadata, query the T3
-#' AJAX interface to determine which genotyping protocols were used, and
-#' return a combined tibble.
+#' Wrapper for getGenoProtocolFromSingleGerm.
 #'
-#' @param all_germ A data frame or tibble of germplasm metadata that must
-#'   contain at least the column \code{germplasmDbId}.
-#' @param t3url Base URL for the T3 (or similar) instance, as in
-#'   \code{getGenoProtocolFromSingleGerm()}.
+#' @param germ_id_vec A vector of germplasm DbIds.
+#' @param brapiConnection A BrAPI connection object, typically from
+#'   \code{BrAPI::createBrAPIConnection()}, with a \code{$wizard()} method.
 #' @param verbose Logical; if \code{FALSE} (default), display purrr progress bar
 #'   else print for each \code{germplasmDbId}
 #'
@@ -261,12 +265,19 @@ getGenoProtocolFromSingleGerm <- function(germ_id, t3url, verbose=F){
 #' @importFrom purrr map
 #' @importFrom dplyr bind_rows
 #'
+#' @examples
+#' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+#'
+#' germ_geno_protocols <- getGenoProtocolFromGermVec(
+#'   c("1284387", "1382716", "1415479"), brapiConn)
+#' germ_geno_protocols
+#'
 #' @export
-getGenoProtocolFromGermVec <- function(germ_id_vec, t3url, verbose=F) {
+getGenoProtocolFromGermVec <- function(germ_id_vec, brapiConnection, verbose=F) {
 
   return(purrr::map(germ_id_vec,
                     getGenoProtocolFromSingleGerm,
-                    t3url=t3url,
+                    brapiConnection=brapiConnection,
                     verbose=verbose,
                     .progress=!verbose) |>
            dplyr::bind_rows())
