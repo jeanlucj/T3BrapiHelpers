@@ -68,7 +68,8 @@ getGermplasmFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
 
   get_fields_from_data <- function(data_list){
     if (verbose) cat("Retrieved metadata on", data_list$germplasmName, "\n")
-    return(tibble(germplasmDbId=data_list$germplasmDbId,
+    return(tibble(studyDbId=study_id,
+                  germplasmDbId=data_list$germplasmDbId,
                   germplasmName=data_list$germplasmName,
                   synonyms=data_list$synonyms |> unlist() |> list(),
                   pedigree=data_list$pedigree))

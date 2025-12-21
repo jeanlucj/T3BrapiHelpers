@@ -238,3 +238,59 @@ getTraitsFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
   return(lapply(search_result$combined_data, get_fields_from_data) |>
            dplyr::bind_rows())
 }
+
+#' Get location info from a vector of locations via BrAPI
+#'
+#' Queries the BrAPI \code{/search/locations} endpoint and
+#' returns a data frame of lat, long, and elevation values for those locations
+#'
+#' @param loc_vec A vector of location names or DB IDs for which you want lat,
+#'   long, and elevation values
+#' @param brapiConnection A BrAPI connection object, typically from
+#'   \code{BrAPI::createBrAPIConnection()}, with a \code{$search()} method.
+#' @param id_or_name A string. If "name" will expect loc_vec to be a vector of
+#'   location names else a vector of location DB IDs.
+#'
+#' @return A data frame of lattitude, longitude and elevation values for the
+#'   loactions
+#'
+#' @importFrom dplyr bind_rows
+#'
+#' @examples
+#' brapiConn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
+#'
+#' locs_df <- getLatLongElevFromLocationVec(c("31", "143"), brapiConn)
+#' locs_df
+#'
+#' @export
+# I don't know if I'm doing it wrong, but the response is always ALL the
+# locations, so I have to filter after
+getLatLongElevFromLocationVec <- function(loc_vec, brapiConnection,
+                                          id_or_name="name"){
+  #loc_search <- brapiConnection$search("locations", body=list(
+  #  locationName = loc_vec
+  #))
+  locSearchToRow <- function(locList){
+    coords <- unlist(locList$coordinates$geometry$coordinates)
+
+    dplyr::tibble(
+      locationDbId = locList$locationDbId %||% NA,
+      locationName = locList$locationName %||% NA,
+      abbreviation = locList$abbreviation %||% NA,
+      latitude = ifelse(!is.null(coords) & length(coords) >= 2, coords[2], NA),
+      longitude = ifelse(!is.null(coords) & length(coords) >= 1, coords[1], NA),
+      elevation = ifelse(!is.null(coords) & length(coords) >= 3, coords[3], NA)
+    )
+  }
+
+  loc_search <- brapiConnection$search("locations")$combined_data
+
+  loc_df <- lapply(loc_search, locSearchToRow) |>
+    dplyr::bind_rows()
+
+  if (id_or_name == "name"){
+    return(dplyr::filter(loc_df, locationName %in% loc_vec))
+  } else{
+    return(dplyr::filter(loc_df, locationDbId %in% loc_vec))
+  }
+}

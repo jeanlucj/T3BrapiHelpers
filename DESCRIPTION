@@ -1,7 +1,7 @@
 Package: T3BrapiHelpers
 Type: Package
 Title: Functions To Get Metadata On Trials And Accessions From T3 With BrAPI
-Version: 0.1.17
+Version: 0.1.21
 Authors@R:
   person(
     "Mulderrig", "Timothy",
