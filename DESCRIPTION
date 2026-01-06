@@ -29,9 +29,11 @@ LazyData: true
 Imports: 
     BrAPI,
     dplyr,
+    gdsfmt,
     httr,
     janitor,
     purrr,
+    SNPRelate,
     tibble
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
