@@ -35,25 +35,26 @@
 #' makeRowFromTrialResult(tr)
 #'
 makeRowFromTrialResult <- function(tr){
-  return(
-    tibble::tibble(
-      studyDbId = tr$studyDbId %||% NA_integer_,
-      studyName = tr$studyName %||% NA_character_,
-      studyType = tr$studyType %||% NA_character_,
-      studyDescription = tr$studyDescription %||% NA_character_,
-      locationName = tr$locationName %||% NA_character_,
-      trialDbID = tr$trialDbId %||% NA_integer_,
-      startDate = as.POSIXct(tr$startDate,
-                             format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC") %||% NA,
-      endDate = as.POSIXct(tr$endDate,
-                           format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC") %||% NA,
-      programName = tr$additionalInfo$programName %||% NA_character_,
-      commonCropName = tr$commonCropName %||% NA_character_,
-      experimentalDesign = tr$experimentalDesign$description,
-      createDate = as.POSIXct(tr$additionalInfo$createDate,
-                              format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC") %||% NA
-    )
+  toRet <- tibble::tibble(
+    studyDbId = tr$studyDbId %||% NA_integer_,
+    studyName = tr$studyName %||% NA_character_,
+    studyType = tr$studyType %||% NA_character_,
+    studyDescription = tr$studyDescription %||% NA_character_,
+    locationName = tr$locationName %||% NA_character_,
+    trialDbID = tr$trialDbId %||% NA_integer_,
+    startDate = tr$startDate %||% NA,
+    endDate = tr$endDate %||% NA,
+    programName = tr$additionalInfo$programName %||% NA_character_,
+    commonCropName = tr$commonCropName %||% NA_character_,
+    experimentalDesign = tr$experimentalDesign$description,
+    createDate = tr$additionalInfo$createDate %||% NA
   )
+  toRet <- toRet |> dplyr::mutate(
+    startDate = as.POSIXct(startDate, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+    endDate = as.POSIXct(endDate, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+    createDate = as.POSIXct(createDate, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+  )
+  return(toRet)
 }
 
 #' Retrieve metadata for a set of trials by study IDs
