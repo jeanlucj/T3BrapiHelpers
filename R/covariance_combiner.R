@@ -24,8 +24,6 @@
 #' @importFrom Matrix solve
 #' @importFrom stats cov
 #'
-#' Example usage of covariance_combiner
-#'
 #' @examples
 #' \dontrun{
 #' # Create some example data

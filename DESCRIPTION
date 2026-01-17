@@ -41,3 +41,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+URL: https://jeanlucj.github.io/T3BrapiHelpers/
