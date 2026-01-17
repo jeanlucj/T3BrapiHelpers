@@ -1,0 +1,99 @@
+# Listing Genotyping Projects across all Genotyping Protocols (T3 Wheat Sandbox)
+
+``` r
+# Create a BrAPI connection to the T3 wheat sandbox
+conn <- BrAPI::createBrAPIConnection(
+  "wheat-sandbox.triticeaetoolbox.org",
+  is_breedbase = TRUE
+)
+
+# Convert protocol metadata to a tibble
+geno_proto <- conn$wizard("genotyping_protocols")$content[[1]]
+
+extract_db_id <- function(subList){
+  c(sapply(subList, FUN=function(v) return(v[[1]])))
+}
+
+extract_name <- function(subList){
+  c(sapply(subList, FUN=function(v) return(v[[2]])))
+}
+
+extract_project_meta <- function(projSubList, name_or_id="name"){
+  if ("message" %in% names(projSubList)){
+    meta <- c(NULL)
+  } else{
+    idx <- dplyr::if_else(name_or_id == "name", 2, 1)
+    meta <- sapply(projSubList$list, FUN=function(v) return(v[[idx]]))
+  }
+  return(meta)
+}
+
+genotyping_protocols <- tibble::tibble(
+  genotyping_protocol_db_id=extract_db_id(geno_proto),
+  genotyping_protocol_name=extract_name(geno_proto))
+
+# For each protocol, retrieve genotyping projects
+geno_projects <- purrr::map(
+  .x=genotyping_protocols$genotyping_protocol_db_id,
+  .f=function(pid){
+    res <- conn$wizard(data_type="genotyping_projects",
+                       filters=list(genotyping_protocols=pid))$content
+  },
+  .progress=TRUE)
+
+genotyping_protocols <- genotyping_protocols |>
+  dplyr::mutate(
+    genotyping_project_db_id=purrr::map(geno_projects, extract_project_meta, 
+                              name_or_id="id"))
+
+genotyping_protocols <- tidyr::unnest(genotyping_protocols,
+                                      genotyping_project_db_id)
+
+genotyping_protocols <- genotyping_protocols |> 
+  dplyr::mutate(
+    genotyping_project_name=purrr::map(geno_projects, extract_project_meta, 
+                             name_or_id="name") |> unlist()) 
+
+# For each project, retrieve accessions
+project_accessions <- purrr::map(
+  .x=genotyping_protocols$genotyping_project_db_id,
+  .f=function(pid){
+    res <- conn$wizard(data_type="accessions",
+                       filters=list(genotyping_projects=pid))$content[[1]]
+  },
+  .progress = TRUE)
+
+genotyping_protocols <- genotyping_protocols |>
+  dplyr::mutate(
+    accessions_db_id=purrr::map(project_accessions, extract_db_id)) |> 
+  dplyr::mutate(
+    accessions_name=purrr::map(project_accessions, extract_name)) 
+
+# Find pairs of projects that share > x accessions in common
+find_projects_overlapping_accessions <- function(accessions, projects, 
+                                                 min_overlap=10){
+  min_overlap <- min(min_overlap, length(accessions))
+  overlapping_projects <- integer()
+  for (i in 1:nrow(projects)){
+    if (length(intersect(accessions, projects$accessions_db_id[[i]])) >= 
+        min_overlap){
+      overlapping_projects <- c(overlapping_projects,
+                                projects$genotyping_project_db_id[i])
+    }
+  }
+  return(overlapping_projects)
+}
+
+genotyping_protocols <- genotyping_protocols |>
+  dplyr::mutate(
+    overlapping_projects=purrr::map(genotyping_protocols$accessions_db_id, 
+                                find_projects_overlapping_accessions,
+                                genotyping_protocols))
+
+# Create sets of projects where all projects share > x accessions with at least
+# one other project
+
+# Optional output
+# readr::write_csv(genotyping_protocols, "archived_vcf_projects.csv")
+# saveRDS(genotyping_protocols, "archived_vcf_projects.rds")
+```
