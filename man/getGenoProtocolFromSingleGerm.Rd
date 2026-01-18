@@ -11,6 +11,8 @@ getGenoProtocolFromSingleGerm(germ_id, brapiConnection, verbose = F)
 
 \item{brapiConnection}{A BrAPI connection object, typically from
 \code{BrAPI::createBrAPIConnection()}, with a \code{$wizard()} method.}
+
+\item{verbose}{Logical; if TRUE, prints progress messages.}
 }
 \value{
 A tibble with a single row containing
@@ -24,9 +26,11 @@ brapiConnection to determine which genotyping protocols have been used for a
 specific germplasm
 }
 \examples{
+\dontrun{
 brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
 winner_geno_protocols <- getGenoProtocolFromGermVec("1284387", brapiConn)
 winner_geno_protocols
+}
 
 }

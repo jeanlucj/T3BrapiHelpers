@@ -48,7 +48,6 @@ partially observed covariance matrices into a single combined covariance
 matrix.
 }
 \examples{
-\dontrun{
 # Create some example data
 cov1 <- matrix(c(1.0, 0.5, 0.5, 2.0), nrow=2)
 cov2 <- matrix(c(1.5, 0.3, 0.3, 1.8), nrow=2)
@@ -63,7 +62,8 @@ idx3 <- c(0, 2)  # Variables 0 and 2 in third matrix
 result <- covariance_combiner(
   partial_covs=list(cov1, cov2, cov3),
   var_indices=list(idx1, idx2, idx3),
-  degrees_freedom=c(100, 100, 100), calc_sampling_cov = T
+  degrees_freedom=c(100, 100, 100),
+  calc_sampling_cov = TRUE
 )
 
 # Extract the combined covariance matrix
@@ -79,5 +79,5 @@ if (!is.null(result$loglik_path)) {
   plot(result$loglik_path, type="l",
        xlab="Iteration", ylab="Log-likelihood")
 }
-}
+
 }

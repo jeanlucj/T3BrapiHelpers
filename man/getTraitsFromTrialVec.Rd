@@ -33,9 +33,11 @@ connection to compile a vector of all traits measured in each trial in the
 study_id_vec
 }
 \examples{
+\dontrun{
 brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
 traits <- getTraitsFromTrialVec(c("8128", "9421"), brapiConn)
 traits
+}
 
 }

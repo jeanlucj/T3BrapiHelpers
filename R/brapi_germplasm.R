@@ -14,15 +14,6 @@
 #'
 #' @details If synonyms are present, only the first synonym is extracted.
 #'
-#' @examples
-#' gr <- list(
-#'   germplasmDbId = "123456",
-#'   germplasmName = "Accession1",
-#'   synonyms = list(list(synonym = "G1-alt"))
-#' )
-#'
-#' makeRowFromGermResult(gr, study_id = "12345")
-#'
 makeRowFromGermResult <- function(gr, study_id){
   return(
     data.frame(
@@ -58,10 +49,12 @@ makeRowFromGermResult <- function(gr, study_id){
 #' @importFrom dplyr bind_rows
 #'
 #' @examples
+#' \dontrun{
 #' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
 #' germ_df <- getGermplasmFromSingleTrial("8128", brapiConn)
 #' germ_df
+#' }
 #'
 #' @export
 getGermplasmFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
@@ -100,10 +93,12 @@ getGermplasmFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
 #' @importFrom dplyr bind_rows
 #'
 #' @examples
+#' \dontrun{
 #' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
 #' all_germ <- getGermplasmFromTrialVec(c("8128", "9421"), brapiConn)
 #' all_germ
+#' }
 #'
 #' @export
 getGermplasmFromTrialVec <- function(study_id_vec, brapiConnection, verbose=F){
@@ -120,6 +115,7 @@ getGermplasmFromTrialVec <- function(study_id_vec, brapiConnection, verbose=F){
 }
 
 #' Retry a Function Multiple Times on Error
+#' Internal helper; not part of the public API.
 #'
 #' `retryQuery()` repeatedly calls a user-supplied function that may throw an
 #' error (e.g., due to network timeouts, temporary API failures, or file I/O
@@ -154,7 +150,7 @@ getGermplasmFromTrialVec <- function(study_id_vec, brapiConnection, verbose=F){
 #' @examples
 #' # A function that fails twice, then succeeds
 #' i <- 0
-#' result <- retry(
+#' result <- retryQuery(
 #'   function() {
 #'     i <<- i + 1
 #'     if (i < 3) stop("Temporary failure")
@@ -177,6 +173,8 @@ getGermplasmFromTrialVec <- function(study_id_vec, brapiConnection, verbose=F){
 #' retryQuery(fake_call, max_tries = 5, wait = 0.2)
 #'
 #' @keywords internal
+#' @export
+#'
 retryQuery <- function(fun, max_tries = 10, wait = 3, silent = TRUE) {
   for (i in seq_len(max_tries)) {
     out <- try(fun(), silent = silent)
@@ -185,7 +183,7 @@ retryQuery <- function(fun, max_tries = 10, wait = 3, silent = TRUE) {
       return(out)
     }
 
-    message("Attempt ", i, " failed… waiting ", wait, " sec before retry.")
+    message("Attempt ", i, " failed. waiting ", wait, " sec before retry.")
     Sys.sleep(wait)
   }
 
@@ -202,6 +200,7 @@ retryQuery <- function(fun, max_tries = 10, wait = 3, silent = TRUE) {
 #' @param germ_id The germplasmDbId for the accession of interest.
 #' @param brapiConnection A BrAPI connection object, typically from
 #'   \code{BrAPI::createBrAPIConnection()}, with a \code{$wizard()} method.
+#' @param verbose Logical; if TRUE, prints progress messages.
 #'
 #' @return A tibble with a single row containing
 #'   \code{germplasmDbId}, \code{genoProtocolDbId}, and \code{genoProtocolName}.
@@ -212,10 +211,12 @@ retryQuery <- function(fun, max_tries = 10, wait = 3, silent = TRUE) {
 #' @importFrom tibble tibble
 #'
 #' @examples
+#' \dontrun{
 #' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
 #' winner_geno_protocols <- getGenoProtocolFromGermVec("1284387", brapiConn)
 #' winner_geno_protocols
+#' }
 #'
 #' @export
 getGenoProtocolFromSingleGerm <- function(germ_id, brapiConnection, verbose=F){
@@ -267,11 +268,13 @@ getGenoProtocolFromSingleGerm <- function(germ_id, brapiConnection, verbose=F){
 #' @importFrom dplyr bind_rows
 #'
 #' @examples
+#' \dontrun{
 #' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
 #' germ_geno_protocols <- getGenoProtocolFromGermVec(
 #'   c("1284387", "1382716", "1415479"), brapiConn)
 #' germ_geno_protocols
+#' }
 #'
 #' @export
 getGenoProtocolFromGermVec <- function(germ_id_vec, brapiConnection, verbose=F) {

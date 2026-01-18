@@ -2,7 +2,8 @@
 % Please edit documentation in R/brapi_germplasm.R
 \name{retryQuery}
 \alias{retryQuery}
-\title{Retry a Function Multiple Times on Error}
+\title{Retry a Function Multiple Times on Error
+Internal helper; not part of the public API.}
 \usage{
 retryQuery(fun, max_tries = 10, wait = 3, silent = TRUE)
 }
@@ -48,7 +49,7 @@ quoted expressions.
 \examples{
 # A function that fails twice, then succeeds
 i <- 0
-result <- retry(
+result <- retryQuery(
   function() {
     i <<- i + 1
     if (i < 3) stop("Temporary failure")

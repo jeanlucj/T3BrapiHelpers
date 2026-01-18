@@ -16,24 +16,6 @@
 #' @details This function assumes the infix operator \code{\%||\%} is available
 #'   in the calling environment to replace \code{NULL} with \code{NA}.
 #'
-#' @examples
-#' # Create fake trial result
-#' tr <- list(
-#'   studyDbId = "12345",
-#'   studyName = "Fake Trial",
-#'   studyType = "Yield Trial",
-#'   studyDescription = "Example",
-#'   locationName = "Loc1",
-#'   trialDbId = "trial123",
-#'   startDate = "2020-01-01T00:00:00Z",
-#'   endDate = "2020-02-01T00:00:00Z",
-#'   additionalInfo = list(programName = "Program A"),
-#'   commonCropName = "wheat",
-#'   experimentalDesign = list(description = "RCBD")
-#' )
-#'
-#' makeRowFromTrialResult(tr)
-#'
 makeRowFromTrialResult <- function(tr){
   toRet <- tibble::tibble(
     studyDbId = tr$studyDbId %||% NA_integer_,
@@ -76,11 +58,13 @@ makeRowFromTrialResult <- function(tr){
 #' @importFrom janitor clean_names
 #'
 #' @examples
+#' \dontrun{
 #' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
 #' # Retrieve metadata for two trials
 #' df <- getTrialMetaDataFromTrialVec(c("8128", "9421"), brapiConn)
 #' df
+#' }
 #'
 #' @export
 getTrialMetaDataFromTrialVec <- function(study_id_vec, brapiConnection){
@@ -127,11 +111,13 @@ getTrialMetaDataFromTrialVec <- function(study_id_vec, brapiConnection){
 #' @importFrom janitor clean_names
 #'
 #' @examples
+#' \dontrun{
 #' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
 #' # Retrieve trial metadata for "Wheat"
 #' all_trials <- getAllTrialMetaData(brapiConn, "Wheat")
 #' all_trials
+#' }
 #'
 #' @export
 getAllTrialMetaData <- function(brapiConnection, cropName){
@@ -171,10 +157,12 @@ getAllTrialMetaData <- function(brapiConnection, cropName){
 #' @importFrom dplyr if_else
 #'
 #' @examples
+#' \dontrun{
 #' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
 #' traits <- getTraitsFromTrialVec(c("8128", "9421"), brapiConn)
 #' traits
+#' }
 #'
 #' @export
 getTraitsFromTrialVec <- function(study_id_vec, brapiConnection,
@@ -213,10 +201,12 @@ getTraitsFromTrialVec <- function(study_id_vec, brapiConnection,
 #' @importFrom dplyr bind_rows
 #'
 #' @examples
+#' \dontrun{
 #' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
 #' traits_df <- getTraitsFromSingleTrial("8128", brapiConn)
 #' traits_df
+#' }
 #'
 #' @export
 getTraitsFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
@@ -254,10 +244,12 @@ getTraitsFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
 #' @importFrom dplyr bind_rows
 #'
 #' @examples
+#' \dontrun{
 #' brapiConn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
 #' locs_df <- getLatLongElevFromLocationVec(c("31", "143"), brapiConn)
 #' locs_df
+#' }
 #'
 #' @export
 # I don't know if I'm doing it wrong, but the response is always ALL the

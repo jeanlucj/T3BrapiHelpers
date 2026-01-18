@@ -26,9 +26,11 @@ Queries the BrAPI \code{/search/variables} endpoint for a given trial and
 returns a data frame of traits and their DbIds measured in that trial
 }
 \examples{
+\dontrun{
 brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
 traits_df <- getTraitsFromSingleTrial("8128", brapiConn)
 traits_df
+}
 
 }

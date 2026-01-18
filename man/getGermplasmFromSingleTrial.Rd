@@ -26,9 +26,11 @@ Queries the BrAPI \code{/search/germplasm} endpoint for a given trial and
 returns a data frame of germplasm accessions associated with that trial
 }
 \examples{
+\dontrun{
 brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
 germ_df <- getGermplasmFromSingleTrial("8128", brapiConn)
 germ_df
+}
 
 }

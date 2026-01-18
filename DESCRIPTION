@@ -23,7 +23,7 @@ Authors@R:
   )
 Description: More about what it does (maybe more than one line).
     Continuation lines should be indented.
-License: What license is it under?
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
@@ -32,6 +32,7 @@ Imports:
     gdsfmt,
     httr,
     janitor,
+    Matrix,
     purrr,
     SNPRelate,
     tibble
@@ -39,6 +40,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    tidyr
 VignetteBuilder: knitr
 URL: https://jeanlucj.github.io/T3BrapiHelpers/

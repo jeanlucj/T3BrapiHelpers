@@ -24,9 +24,11 @@ Wrapper around \code{\link{getGermplasmFromSingleTrial}} to retrieve and combine
 germplasm metadata for a vector of trial IDs.
 }
 \examples{
+\dontrun{
 brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
 all_germ <- getGermplasmFromTrialVec(c("8128", "9421"), brapiConn)
 all_germ
+}
 
 }

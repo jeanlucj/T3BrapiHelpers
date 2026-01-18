@@ -26,22 +26,3 @@ used by functions that assemble trial metadata tables.
 This function assumes the infix operator \code{\%||\%} is available
 in the calling environment to replace \code{NULL} with \code{NA}.
 }
-\examples{
-# Create fake trial result
-tr <- list(
-  studyDbId = "12345",
-  studyName = "Fake Trial",
-  studyType = "Yield Trial",
-  studyDescription = "Example",
-  locationName = "Loc1",
-  trialDbId = "trial123",
-  startDate = "2020-01-01T00:00:00Z",
-  endDate = "2020-02-01T00:00:00Z",
-  additionalInfo = list(programName = "Program A"),
-  commonCropName = "wheat",
-  experimentalDesign = list(description = "RCBD")
-)
-
-makeRowFromTrialResult(tr)
-
-}

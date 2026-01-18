@@ -1,0 +1,131 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit README.Rmd -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/",
+  out.width = "100%"
+)
+```
+
+# T3BrapiHelpers
+
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/jeanlucj/T3BrapiHelpers/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jeanlucj/T3BrapiHelpers/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+Helpers for working with **BrAPI** services and **The Triticeae Toolbox (T3)**
+from R. This package provides small, composable utilities that make it easier to
+authenticate, query, and transform BrAPI data into formats suitable for
+downstream T3 workflows.
+
+---
+
+## Installation
+
+You can install the development version from GitHub:
+
+```{r}
+# install.packages("pak")
+pak::pak("jeanlucj/T3BrapiHelpers")
+```
+
+---
+
+## Package goals
+
+The main goals of **T3BrapiHelpers** are to:
+
+- simplify common BrAPI queries used in T3 pipelines
+- provide safe defaults and consistent return types
+- reduce boilerplate when moving between BrAPI responses and T3-ready tables
+- make exploratory and scripted BrAPI work easier from R
+
+The package intentionally stays lightweight and avoids re-implementing full BrAPI clients.
+
+---
+
+## Quick start
+
+```{r}
+library(T3BrapiHelpers)
+
+# Example: connect to a BrAPI endpoint
+con <- brapi_connect(
+  url = "https://example.brapi.server"
+)
+
+# Example: fetch studies and convert to a tibble
+studies <- brapi_get_studies(con)
+
+head(studies)
+```
+
+*(Replace with real functions once the API stabilizes.)*
+
+---
+
+## Typical workflow
+
+A common pattern when using this package is:
+
+1. Connect to a BrAPI server
+2. Retrieve core objects (studies, trials, germplasm)
+3. Normalize or reshape results
+4. Export or pass results to T3 tooling
+
+```{r}
+con <- brapi_connect("https://example.brapi.server")
+
+trials <- brapi_get_trials(con)
+traits <- brapi_get_traits(con)
+
+t3_traits <- t3_format_traits(traits)
+```
+
+---
+
+## Relationship to other tools
+
+- **BrAPI**: This package assumes familiarity with the BrAPI specification and does not
+  attempt to mirror it completely.
+- **T3**: Output formats are chosen to align with common T3 data ingestion expectations.
+- **Other R BrAPI packages**: T3BrapiHelpers can be used alongside fuller BrAPI clients.
+
+---
+
+## Documentation
+
+- Function reference: see the **Reference** section of the website
+- Articles / tutorials: see **Articles** (vignettes) when available
+
+Full documentation is available at  
+https://jeanlucj.github.io/T3BrapiHelpers/
+
+---
+
+## Development status
+
+This package is under active development.
+
+- APIs may change
+- Function names and signatures are not yet stable
+- Feedback and issues are welcome
+
+---
+
+## Contributing
+
+Issues and pull requests are welcome.
+Please include a minimal reproducible example when reporting bugs.
+
+---
+
+## License
+
+MIT © Jean-Luc Jannink
