@@ -37,7 +37,7 @@ Imports:
     SNPRelate,
     tibble
 Remotes:
-    TriticeaeToolbox/BrAPI.R
+    BrAPI=github::TriticeaeToolbox/BrAPI.R
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Suggests: 
