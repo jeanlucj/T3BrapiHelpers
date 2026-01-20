@@ -79,7 +79,7 @@ A common pattern when using this package is:
 1. Connect to a BrAPI server
 2. Retrieve core objects (studies, trials, germplasm)
 3. Normalize or reshape results
-4. Export or pass results to T3 tooling
+4. Export or pass results to scripts using T3 data
 
 ```{r T3Predictathon2026 trials}
 wheatConn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org",

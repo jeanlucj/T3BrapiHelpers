@@ -2,7 +2,7 @@
 title: "Listing Genotyping Projects across all Genotyping Protocols (T3 Wheat Sandbox)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Listing Genotyping Projects with Archived VCFs (T3 Wheat Sandbox)}
+  %\VignetteIndexEntry{Listing Genotyping Projects across all Genotyping Protocols (T3 Wheat Sandbox)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
