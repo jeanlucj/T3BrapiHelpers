@@ -32,16 +32,11 @@ UTC.
 ## Examples
 
 ``` r
+if (FALSE) { # \dontrun{
 brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
 # Retrieve metadata for two trials
 df <- getTrialMetaDataFromTrialVec(c("8128", "9421"), brapiConn)
 df
-#> # A tibble: 2 × 12
-#>   study_db_id study_name  study_type study_description location_name trial_db_id
-#>   <chr>       <chr>       <chr>      <chr>             <chr>         <chr>      
-#> 1 8128        2017_WestL… NA         2017 trial        West Lafayet… 368        
-#> 2 9421        2022_AYT_D… phenotypi… 2022 AYT Yield T… Dakota Lakes… 9627       
-#> # ℹ 6 more variables: start_date <dttm>, end_date <dttm>, program_name <chr>,
-#> #   common_crop_name <chr>, experimental_design <chr>, create_date <dttm>
+} # }
 ```

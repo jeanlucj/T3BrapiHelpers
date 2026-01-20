@@ -29,25 +29,3 @@ A one-row `data.frame` with columns such as `studyDbId`, `studyName`,
 
 This function assumes the infix operator `%||%` is available in the
 calling environment to replace `NULL` with `NA`.
-
-## Examples
-
-``` r
-# Create fake trial result
-tr <- list(
-  studyDbId = "12345",
-  studyName = "Fake Trial",
-  studyType = "Yield Trial",
-  studyDescription = "Example",
-  locationName = "Loc1",
-  trialDbId = "trial123",
-  startDate = "2020-01-01T00:00:00Z",
-  endDate = "2020-02-01T00:00:00Z",
-  additionalInfo = list(programName = "Program A"),
-  commonCropName = "wheat",
-  experimentalDesign = list(description = "RCBD")
-)
-
-makeRowFromTrialResult(tr)
-#> Error in makeRowFromTrialResult(tr): could not find function "makeRowFromTrialResult"
-```

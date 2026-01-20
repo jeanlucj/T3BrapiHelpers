@@ -107,8 +107,7 @@ resulting combined covariance matrix (default: FALSE)</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="co"># Create some example data</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Create some example data</span></span></span>
 <span class="r-in"><span><span class="va">cov1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">2.0</span><span class="op">)</span>, nrow<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">cov2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">0.3</span>, <span class="fl">0.3</span>, <span class="fl">1.8</span><span class="op">)</span>, nrow<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">cov3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2.0</span>, <span class="fl">1.0</span>, <span class="fl">1.0</span>, <span class="fl">3.0</span><span class="op">)</span>, nrow<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
@@ -122,23 +121,36 @@ resulting combined covariance matrix (default: FALSE)</p></dd>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">covariance_combiner</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  partial_covs<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">cov1</span>, <span class="va">cov2</span>, <span class="va">cov3</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  var_indices<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">idx1</span>, <span class="va">idx2</span>, <span class="va">idx3</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  degrees_freedom<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">100</span>, <span class="fl">100</span><span class="op">)</span>, calc_sampling_cov <span class="op">=</span> <span class="cn">T</span></span></span>
+<span class="r-in"><span>  degrees_freedom<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">100</span>, <span class="fl">100</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  calc_sampling_cov <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Extract the combined covariance matrix</span></span></span>
 <span class="r-in"><span><span class="va">combined_cov</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">$</span><span class="va">psi</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">combined_cov</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           [,1]      [,2]      [,3]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 1.4640624 0.6119771 0.6374684</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 0.6119771 1.8049584 0.4883863</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 0.6374684 0.4883863 2.3632558</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Extract the sampling covariance matrix</span></span></span>
 <span class="r-in"><span><span class="va">sampling_cov</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">$</span><span class="va">sampling_cov</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">sampling_cov</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             [,1]        [,2]        [,3]        [,4]        [,5]        [,6]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 0.003073668 0.004935878 0.001955428 0.007860756 0.006478417 0.006079397</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 0.004935878 0.008369076 0.003670644 0.013215654 0.011383462 0.010682202</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 0.001955428 0.003670644 0.001879662 0.005710705 0.005295758 0.004969429</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] 0.007860756 0.013215654 0.005710705 0.020896095 0.017879492 0.016778085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] 0.006478417 0.011383462 0.005295758 0.017879492 0.015823980 0.014849067</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] 0.006079397 0.010682202 0.004969429 0.016778085 0.014849067 0.013934217</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot the log-likelihood path</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">loglik_path</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">loglik_path</span>, type<span class="op">=</span><span class="st">"l"</span>,</span></span>
 <span class="r-in"><span>       xlab<span class="op">=</span><span class="st">"Iteration"</span>, ylab<span class="op">=</span><span class="st">"Log-likelihood"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-plt img"><img src="covariance_combiner-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -146,7 +158,7 @@ resulting combined covariance matrix (default: FALSE)</p></dd>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Jannink Jean-Luc.</p>
+  <p>Developed by Mulderrig Timothy, Waring David, Jannink Jean-Luc.</p>
 </div>
 
 <div class="pkgdown-footer-right">

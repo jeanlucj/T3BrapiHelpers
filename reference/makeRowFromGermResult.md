@@ -30,16 +30,3 @@ A one-row `data.frame` with columns `studyDbId`, `germplasmDbId`,
 ## Details
 
 If synonyms are present, only the first synonym is extracted.
-
-## Examples
-
-``` r
-gr <- list(
-  germplasmDbId = "123456",
-  germplasmName = "Accession1",
-  synonyms = list(list(synonym = "G1-alt"))
-)
-
-makeRowFromGermResult(gr, study_id = "12345")
-#> Error in makeRowFromGermResult(gr, study_id = "12345"): could not find function "makeRowFromGermResult"
-```

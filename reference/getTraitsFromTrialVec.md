@@ -44,13 +44,10 @@ A vector of either trait names or trait DB IDs.
 ## Examples
 
 ``` r
+if (FALSE) { # \dontrun{
 brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
 traits <- getTraitsFromTrialVec(c("8128", "9421"), brapiConn)
 traits
-#> # A tibble: 2 × 2
-#>   study_id traits           
-#>   <chr>    <list>           
-#> 1 8128     <tibble [18 × 1]>
-#> 2 9421     <tibble [6 × 1]> 
+} # }
 ```

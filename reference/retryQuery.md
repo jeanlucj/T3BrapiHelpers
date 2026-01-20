@@ -1,4 +1,4 @@
-# Retry a Function Multiple Times on Error
+# Retry a Function Multiple Times on Error Internal helper; not part of the public API.
 
 `retryQuery()` repeatedly calls a user-supplied function that may throw
 an error (e.g., due to network timeouts, temporary API failures, or file
@@ -62,7 +62,7 @@ than evaluating quoted expressions.
 ``` r
 # A function that fails twice, then succeeds
 i <- 0
-result <- retry(
+result <- retryQuery(
   function() {
     i <<- i + 1
     if (i < 3) stop("Temporary failure")
@@ -71,9 +71,10 @@ result <- retry(
   max_tries = 5,
   wait = 0.1
 )
-#> Error in retry(function() {    i <<- i + 1    if (i < 3)         stop("Temporary failure")    "Success!"}, max_tries = 5, wait = 0.1): could not find function "retry"
+#> Attempt 1 failed. waiting 0.1 sec before retry.
+#> Attempt 2 failed. waiting 0.1 sec before retry.
 result
-#> Error: object 'result' not found
+#> [1] "Success!"
 
 # Example with an httr call (fake for illustration)
 t3url <- "https://example.org"
@@ -85,5 +86,5 @@ fake_call <- function() {
 }
 
 retryQuery(fake_call, max_tries = 5, wait = 0.2)
-#> Error in retryQuery(fake_call, max_tries = 5, wait = 0.2): could not find function "retryQuery"
+#> [1] "Called: https://example.org/endpoint"
 ```

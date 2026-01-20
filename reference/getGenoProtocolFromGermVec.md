@@ -33,15 +33,11 @@ and names as list columns.
 ## Examples
 
 ``` r
+if (FALSE) { # \dontrun{
 brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
 germ_geno_protocols <- getGenoProtocolFromGermVec(
   c("1284387", "1382716", "1415479"), brapiConn)
 germ_geno_protocols
-#> # A tibble: 3 × 3
-#>   germplasmDbId genoProtocolDbId genoProtocolName
-#>   <chr>         <list>           <list>          
-#> 1 1284387       <lgl [1]>        <lgl [1]>       
-#> 2 1382716       <lgl [1]>        <lgl [1]>       
-#> 3 1415479       <lgl [1]>        <lgl [1]>       
+} # }
 ```

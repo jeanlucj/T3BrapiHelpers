@@ -35,11 +35,10 @@ loactions
 ## Examples
 
 ``` r
+if (FALSE) { # \dontrun{
 brapiConn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
 
 locs_df <- getLatLongElevFromLocationVec(c("31", "143"), brapiConn)
 locs_df
-#> # A tibble: 0 × 6
-#> # ℹ 6 variables: locationDbId <chr>, locationName <chr>, abbreviation <chr>,
-#> #   latitude <dbl>, longitude <dbl>, elevation <dbl>
+} # }
 ```

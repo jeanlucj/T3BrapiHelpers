@@ -22,6 +22,10 @@ getGenoProtocolFromSingleGerm(germ_id, brapiConnection, verbose = F)
   [`BrAPI::createBrAPIConnection()`](https://triticeaetoolbox.github.io/BrAPI.R/reference/createBrAPIConnection.html),
   with a `$wizard()` method.
 
+- verbose:
+
+  Logical; if TRUE, prints progress messages.
+
 ## Value
 
 A tibble with a single row containing `germplasmDbId`,
@@ -32,12 +36,10 @@ IDs/names.
 ## Examples
 
 ``` r
+if (FALSE) { # \dontrun{
 brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
 winner_geno_protocols <- getGenoProtocolFromGermVec("1284387", brapiConn)
 winner_geno_protocols
-#> # A tibble: 1 × 3
-#>   germplasmDbId genoProtocolDbId genoProtocolName
-#>   <chr>         <list>           <list>          
-#> 1 1284387       <lgl [1]>        <lgl [1]>       
+} # }
 ```

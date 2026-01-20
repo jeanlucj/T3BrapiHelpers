@@ -74,25 +74,12 @@ one row per germplasm per trial</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">brapiConn</span> <span class="op">&lt;-</span> <span class="fu">BrAPI</span><span class="fu">::</span><span class="fu"><a href="https://triticeaetoolbox.github.io/BrAPI.R/reference/createBrAPIConnection.html" class="external-link">createBrAPIConnection</a></span><span class="op">(</span><span class="st">"wheat-sandbox.triticeaetoolbox.org"</span>, is_breedbase <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="va">brapiConn</span> <span class="op">&lt;-</span> <span class="fu">BrAPI</span><span class="fu">::</span><span class="fu"><a href="https://triticeaetoolbox.github.io/BrAPI.R/reference/createBrAPIConnection.html" class="external-link">createBrAPIConnection</a></span><span class="op">(</span><span class="st">"wheat-sandbox.triticeaetoolbox.org"</span>, is_breedbase <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">all_germ</span> <span class="op">&lt;-</span> <span class="fu">getGermplasmFromTrialVec</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"8128"</span>, <span class="st">"9421"</span><span class="op">)</span>, <span class="va">brapiConn</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  <span style="color: #00BB00;">■■■■■■■■■■■■■■■■                </span>  50% |  ETA:  4s</span>
 <span class="r-in"><span><span class="va">all_germ</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 402 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    studyDbId germplasmDbId germplasmName   synonyms  pedigree                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 8128      1281721       P0175A1-37-4-1  <span style="color: #949494;">&lt;chr [2]&gt;</span> 981419/97397            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 8128      1344336       P2114           <span style="color: #949494;">&lt;chr [2]&gt;</span> NA/NA                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 8128      219113        TRUMAN          <span style="color: #949494;">&lt;chr [1]&gt;</span> MO11769/MADISON         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 8128      219183        VA10W-663       <span style="color: #949494;">&lt;NULL&gt;</span>    NA/NA                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 8128      219210        MO081537        <span style="color: #949494;">&lt;NULL&gt;</span>    KY90C-383-18-1/IL94-1653</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 8128      219264        IL04-24668      <span style="color: #949494;">&lt;chr [1]&gt;</span> IL98-13404/IL97-3578    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 8128      219303        VA09W-46        <span style="color: #949494;">&lt;NULL&gt;</span>    NA/NA                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 8128      219311        VA09W-73        <span style="color: #949494;">&lt;NULL&gt;</span>    NA/NA                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 8128      219414        KY93C-1238-17-1 <span style="color: #949494;">&lt;chr [1]&gt;</span> NA/NA                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 8128      219435        SHIRLEY         <span style="color: #949494;">&lt;chr [3]&gt;</span> NA/NA                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 392 more rows</span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -101,7 +88,7 @@ one row per germplasm per trial</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Jannink Jean-Luc.</p>
+  <p>Developed by Mulderrig Timothy, Waring David, Jannink Jean-Luc.</p>
 </div>
 
 <div class="pkgdown-footer-right">
