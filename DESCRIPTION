@@ -6,7 +6,7 @@ Version: 0.1.23
 Authors@R:
   c(
     person("Mulderrig", "Timothy", , "tm639@cornell.edu", 
-      role = c("aut", "cre"),
+      role = c("aut"),
       comment = c(ORCID = "0000-0002-2834-1195")),
     person("Waring", "David", , "djw64@cornell.edu", 
       role = "aut",
