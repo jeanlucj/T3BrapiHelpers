@@ -176,7 +176,7 @@ getTraitsFromTrialVec <- function(study_id_vec, brapiConnection,
   # Compile a tibble with either names or ids in one cell
   namesOrIds <- ifelse(namesOrIds == "names", 2, 1)
   makeStudyIDrow <- function(idx){
-    return(tibble(study_id=study_id_vec[idx],
+    return(tibble::tibble(study_id=study_id_vec[idx],
                   traits=list(trialTraitsList[[idx]][, namesOrIds])))
   }
   return(lapply(1:length(study_id_vec), makeStudyIDrow) |> dplyr::bind_rows())

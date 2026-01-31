@@ -286,3 +286,86 @@ getGenoProtocolFromGermVec <- function(germ_id_vec, brapiConnection, verbose=F) 
                     .progress=!verbose) |>
            dplyr::bind_rows())
 }
+
+#' Get trial metadata for all trials in which a single germplasm was evaluated
+#'
+#' Queries the BrAPI \code{/search/studies} endpoint for a given germplasm and
+#' returns a data frame of trials associated with that germplasm
+#'
+#' @param germplasm_id A single germplasmDbId to query trials for.
+#' @param brapiConnection A BrAPI connection object, from
+#'   \code{BrAPI::createBrAPIConnection()}.
+#' @param verbose Logical; if \code{TRUE}, print messages about the retrieval
+#'   process.
+#'
+#' @return A data frame of trial metadata for the given germplasm, with one
+#'   row per trial. Columns include \code{germplasmDbId}, \code{studyDbId}, and
+#'   \code{studyName}. If no result is found, not sure what happens.
+#'
+#' @importFrom dplyr bind_rows
+#'
+#' @examples
+#' \dontrun{
+#' brapiConn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
+#'
+#' trial_df <- getTrialFromSingleGermplasm("1284387", brapiConn)
+#' trial_df
+#' }
+#'
+#' @export
+getTrialFromSingleGermplasm <- function(germplasm_id, brapiConnection,
+                                        verbose=F){
+
+  get_fields_from_data <- function(data_list){
+    if (verbose) cat("Retrieved metadata on", data_list$studyName, "\n")
+    return(tibble::tibble(germplasmDbId=germplasm_id,
+                  studyDbId=data_list$studyDbId,
+                  studyName=data_list$studyName))
+  }
+
+  search_result <- brapiConnection$search("studies",
+                                    body = list(germplasmDbIds = germplasm_id))
+
+  # Make a data.frame from the combined data
+  return(lapply(search_result$combined_data, get_fields_from_data) |>
+           dplyr::bind_rows())
+}
+
+#' Get trial metadata for multiple germplasms
+#'
+#' Wrapper around \code{\link{getTrialFromSingleGermplasm}} to retrieve and
+#' combine trial metadata for a vector of germplasm IDs.
+#'
+#' @param germplasm_id_vec A character vector of germplasmDbIds to query.
+#' @param brapiConnection A BrAPI connection object as used in
+#'   \code{getTrialFromSingleGermplasm()}.
+#' @param verbose Logical; passed on to \code{getTrialFromSingleGermplasm()} to
+#'   control logging. If FALSE display purrr progress bar
+#'
+#' @return A data frame obtained by row-binding the results of each germplasm,
+#'   with one row per trial per germplasm
+#'
+#' @importFrom dplyr bind_rows
+#'
+#' @examples
+#' \dontrun{
+#' brapiConn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
+#'
+#' all_trial <- getTrialFromGermplasmVec(c("1284387", "1382716"), brapiConn)
+#' all_trial
+#' }
+#'
+#' @export
+getTrialFromGermplasmVec <- function(germplasm_id_vec, brapiConnection,
+                                     verbose=F){
+
+  germMeta_list <- purrr::map(
+    germplasm_id_vec,
+    getTrialFromSingleGermplasm,
+    brapiConnection = brapiConnection,
+    verbose = verbose,
+    .progress = !verbose
+  )
+
+  return(dplyr::bind_rows(germMeta_list))
+}
