@@ -73,7 +73,7 @@ getGermplasmFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
 
   # Make a data.frame from the combined data
   return(lapply(search_result$combined_data, get_fields_from_data) |>
-           dplyr::bind_rows())
+           dplyr::bind_rows() |> dplyr::distinct())
 }
 
 #' Get germplasm metadata for multiple trials
@@ -328,7 +328,7 @@ getTrialFromSingleGermplasm <- function(germplasm_id, brapiConnection,
 
   # Make a data.frame from the combined data
   return(lapply(search_result$combined_data, get_fields_from_data) |>
-           dplyr::bind_rows())
+           dplyr::bind_rows() |> dplyr::distinct())
 }
 
 #' Get trial metadata for multiple germplasms
