@@ -223,7 +223,7 @@ getTraitsFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
 
   # Make a data.frame from the combined data
   return(lapply(search_result$combined_data, get_fields_from_data) |>
-           dplyr::bind_rows())
+           dplyr::bind_rows() |> dplyr::distinct())
 }
 
 #' Get location info from a vector of locations via BrAPI
