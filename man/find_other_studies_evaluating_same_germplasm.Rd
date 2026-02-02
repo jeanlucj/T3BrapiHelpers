@@ -34,7 +34,7 @@ focal study ID
 \dontrun{
 brapiConn <- BrAPI::createBrAPIConnection("T3/Wheat", is_breedbase = TRUE)
 
-Retrieve other studies based on a focal study
+# Retrieve other studies based on a focal study
 df <- find_other_studies_evaluating_same_germplasm("10674", brapiConn)
 df
 }
