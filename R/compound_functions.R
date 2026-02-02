@@ -23,7 +23,7 @@
 #' \dontrun{
 #' brapiConn <- BrAPI::createBrAPIConnection("T3/Wheat", is_breedbase = TRUE)
 #'
-#' Retrieve other studies based on a focal study
+#' # Retrieve other studies based on a focal study
 #' df <- find_other_studies_evaluating_same_germplasm("10674", brapiConn)
 #' df
 #' }
@@ -42,9 +42,12 @@ find_other_studies_evaluating_same_germplasm <- function(study_id, brapiConn,
   return(other_studies_tabyl)
 }
 
+#' Save predictions from a user-provided prediction function into the file
+#' structure needed for the T3 Predictathon 2026
+#'
 #' If you have a prediction function that takes a study ID and a CV0 or CV00
-#' indicator, this function will return the proper file structure to submit to
-#' the Predictathon folks at T3
+#' indicator, this function will run predictions and return the proper file
+#' structure to submit to the Predictathon folks at T3
 #'
 #' @param prediction_function A function that takes as input a study ID and an
 #'   indicator of whether this is a CV0 or CV00 prediction task and returns a
@@ -67,10 +70,10 @@ find_other_studies_evaluating_same_germplasm <- function(study_id, brapiConn,
 #'
 #' @examples
 #' \dontrun{
-#' This is a dummy prediction function that  creates generic and random values
-#' for the outputs that a real prediction function would have to create. The
-#' output is a list.  If your prediction makes a list with the same objects, it
-#' will work with the "make_predictathon_file_structure" function.
+#' # This is a dummy prediction function that  creates generic and random values
+#' # for the outputs that a real prediction function would have to create. The
+#' # output is a list.  If your prediction makes a list with the same objects,
+#' # it will work with the "make_predictathon_file_structure" function.
 #'
 #' dummy_pred_func <- function(study_id, type_of_cv){
 #'   accession_names <- paste0("focal_accession_", study_id, "_", 1:100)
@@ -81,9 +84,9 @@ find_other_studies_evaluating_same_germplasm <- function(study_id, brapiConn,
 #'   return(list(predictions=predictions, trials=trials, accessions=accessions))
 #' }
 #'
-#' Give your prediction function to the make_predictathon_file_structure
-#' function and tell it whether you want trials to be predicted to be identified
-#' by their name or by the T3/Wheat studyDbId.
+#' # Give your prediction function to the make_predictathon_file_structure
+#' # function and tell it whether you want trials to be predicted to be identified
+#' # by their name or by the T3/Wheat studyDbId.
 #'
 #' base_dir <- make_predictathon_file_structure(dummy_pred_func, id_or_name="ID")
 #' list.files(path = base_dir, recursive = TRUE)
