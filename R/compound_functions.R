@@ -30,15 +30,19 @@
 #'
 #' @export
 find_other_studies_evaluating_same_germplasm <- function(study_id, brapiConn,
-                                                         min_germ_common=20){
+                                                         min_germ_common=5){
   this_study_germ <-
     T3BrapiHelpers::getGermplasmFromSingleTrial(study_id, brapiConn)
+
   other_studies <- this_study_germ$germplasmDbId |>
     T3BrapiHelpers::getTrialFromGermplasmVec(brapiConn)
+
   other_studies_tabyl <- janitor::tabyl(other_studies$studyDbId) |>
+    dplyr::select(-percent) |>
     dplyr::rename(other_studies=`other_studies$studyDbId`) |>
     dplyr::filter(other_studies != study_id) |>
-    dplyr::filter(n > min_germ_common) |> dplyr::select(-percent)
+    dplyr::filter(n >= min_germ_common)
+
   return(other_studies_tabyl)
 }
 
@@ -49,12 +53,16 @@ find_other_studies_evaluating_same_germplasm <- function(study_id, brapiConn,
 #' indicator, this function will run predictions and return the proper file
 #' structure to submit to the Predictathon folks at T3
 #'
-#' @param prediction_function A function that takes as input a study ID and an
-#'   indicator of whether this is a CV0 or CV00 prediction task and returns a
-#'   list with objects "predictions": a data.frame with two columns:
-#'   "germplasmName" and "prediction"; "trials": a vector of the names of the
-#'   trials used in training; "accessions": a vector of the names of accessions
-#'   used in training
+#' @param prediction_function A function that takes two inputs:
+#'   "study_id": a string that identifies the trial to be predicted.  You can
+#'   write the function so that it takes the studyDbId or the studyName
+#'   "type_of_cv": a string that is either "CV0" or "CV00" indicating whether
+#'   this is a CV0 or CV00 prediction task
+#'   The function should return a list with objects
+#'   "predictions": a data.frame with two columns: "germplasmName" and
+#'     "prediction"
+#'   "trials": a vector of the names of the trials used in training
+#'   "accessions": a vector of the names of accessions used in training
 #' @param id_or_name A string indicating whether your prediction function needs
 #'   the trial to be predicted to be identified by its name (id_or_name="name")
 #'   or by its T3/Wheat studyDbId (id_or_name="ID", which is the default)
@@ -112,36 +120,40 @@ make_predictathon_file_structure <- function(prediction_function,
   # Make the complete list of prediction tasks: all nine test trials and both
   # CV0 and CV00 cross validation constraints
   prediction_tasks <- tibble::tibble(
-    study_id=rep(use_as_identifier, times=2),
-    type_of_cv=rep(c("CV0", "CV00"), times=length(use_as_identifier))
+    study_id=rep(use_as_identifier, each=2),
+    type_of_cv=rep(c("CV0", "CV00"), times=length(use_as_identifier)),
   )
 
   # Get the predictions using the user-provided prediction function
-  all_prediction_results <- purrr::pmap(prediction_tasks, prediction_function)
+  all_prediction_results <- purrr::pmap(
+    prediction_tasks,
+    prediction_function
+  )
 
   # Make directories and files as requested at
   # https://wheat.triticeaetoolbox.org/guides/t3-prediction-challenge
   base_directory <- paste0(base_directory, "/T3Predictathon2026")
   dir.create(base_directory)
 
+  # Write the results to a folder in the base directory
   prediction_result_index <- 1
   for (trial_directory in study_names){
     with_base <- paste0(base_directory, "/", trial_directory)
     dir.create(with_base)
     for (type_of_cv in c("CV0", "CV00")){
-      file_name <- paste0(with_base, "/Predictions.csv")
+      file_name <- paste0(with_base, "/", type_of_cv, "_Predictions.csv")
       readr::write_csv(
         all_prediction_results[[prediction_result_index]]$predictions,
         file_name
       )
-      file_name <- paste0(with_base, "/Trials.csv")
+      file_name <- paste0(with_base, "/", type_of_cv, "_Trials.csv")
       readr::write_csv(
         tibble::tibble(
           trainging_trials=all_prediction_results[[prediction_result_index]]$trials
         ),
         file_name
       )
-      file_name <- paste0(with_base, "/Accessions.csv")
+      file_name <- paste0(with_base, "/", type_of_cv, "_Accessions.csv")
       readr::write_csv(
         tibble::tibble(
           trainging_accessions=all_prediction_results[[prediction_result_index]]$accessions
