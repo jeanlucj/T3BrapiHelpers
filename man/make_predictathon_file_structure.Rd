@@ -12,12 +12,16 @@ make_predictathon_file_structure(
 )
 }
 \arguments{
-\item{prediction_function}{A function that takes as input a study ID and an
-indicator of whether this is a CV0 or CV00 prediction task and returns a
-list with objects "predictions": a data.frame with two columns:
-"germplasmName" and "prediction"; "trials": a vector of the names of the
-trials used in training; "accessions": a vector of the names of accessions
-used in training}
+\item{prediction_function}{A function that takes two inputs:
+"study_id": a string that identifies the trial to be predicted.  You can
+write the function so that it takes the studyDbId or the studyName
+"type_of_cv": a string that is either "CV0" or "CV00" indicating whether
+this is a CV0 or CV00 prediction task
+The function should return a list with objects
+"predictions": a data.frame with two columns: "germplasmName" and
+"prediction"
+"trials": a vector of the names of the trials used in training
+"accessions": a vector of the names of accessions used in training}
 
 \item{id_or_name}{A string indicating whether your prediction function needs
 the trial to be predicted to be identified by its name (id_or_name="name")

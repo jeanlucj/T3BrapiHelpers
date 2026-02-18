@@ -7,7 +7,7 @@
 find_other_studies_evaluating_same_germplasm(
   study_id,
   brapiConn,
-  min_germ_common = 20
+  min_germ_common = 5
 )
 }
 \arguments{

@@ -39,11 +39,29 @@ This package operates on `BrAPIConnection` R6 objects created by the
 
 ## Installation
 
-You can install the development version from GitHub:
+There are dependencies.
+"gdsfmt" and "SNPRelate" are useful for working with VCF files.  They are 
+bioconductor packages.
+"BrAPI" is a package developed and maintained by David Waring.  It is on GitHub.
+Use "devtools" to install packages from GitHub.
 
 ```{r How to install}
-# install.packages("pak")
-pak::pak("jeanlucj/T3BrapiHelpers")
+
+if (!require("gdsfmt") | !require("SNPRelate")){
+  if (!require("BiocManager")){
+    install.packages("BiocManager")
+  }
+  BiocManager::install(c("gdsfmt", "SNPRelate"))
+}
+
+if (!require("devtools")){
+  install.packages("devtools")
+}
+if (!require("BrAPI")){
+  install_github("TriticeaeToolbox/BrAPI.R")
+}
+
+devtools::install_github("jeanlucj/T3BrapiHelpers")
 ```
 
 ---

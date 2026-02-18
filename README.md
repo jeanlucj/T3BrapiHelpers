@@ -1,3 +1,8 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 80
+---
 
 <!-- README.md is generated from README.Rmd. Please edit README.Rmd -->
 
@@ -6,25 +11,26 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/jeanlucj/T3BrapiHelpers/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jeanlucj/T3BrapiHelpers/actions/workflows/R-CMD-check.yaml)
+
 <!-- badges: end -->
 
-Helpers for working with **BrAPI** services and **The Triticeae Toolbox
-(T3)** from R. This package provides small, composable utilities that
-make it easier to authenticate, query, and transform BrAPI data into
-formats suitable for downstream T3 workflows.
+Helpers for working with **BrAPI** services and **The Triticeae Toolbox (T3)**
+from R. This package provides small, composable utilities that make it easier to
+authenticate, query, and transform BrAPI data into formats suitable for
+downstream T3 workflows.
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 ## Requirements
 
-This package operates on `BrAPIConnection` R6 objects created by the
-**BrAPI** package.
+This package operates on `BrAPIConnection` R6 objects created by the **BrAPI**
+package.
 
-- Install BrAPI from GitHub (not CRAN)
-- Functions expect a valid `BrAPIConnection` its methods
-- Examples that query live servers require an internet connection
+-   Install BrAPI from GitHub (not CRAN)
+-   Functions expect a valid `BrAPIConnection` its methods
+-   Examples that query live servers require an internet connection
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 ## Installation
 
@@ -33,22 +39,22 @@ You can install the development version from GitHub:
 ``` r
 # install.packages("pak")
 pak::pak("jeanlucj/T3BrapiHelpers")
-#>  Found [30m[48;5;249m 1 [49m[39m deps for [30m[48;5;249m 0/1 [49m[39m pkgs [⠋] Resolving jeanlucj/T3BrapiHelpers Found [30m[48;5;249m 1 [49m[39m deps for [30m[48;5;249m 0/1 [49m[39m pkgs [⠙] Resolving jeanlucj/T3BrapiHelpers Found [30m[48;5;249m 1 [49m[39m deps for [30m[48;5;249m 0/1 [49m[39m pkgs [⠹] Resolving jeanlucj/T3BrapiHelpers Found [30m[48;5;249m 1 [49m[39m deps for [30m[48;5;249m 0/1 [49m[39m pkgs [⠸] Resolving jeanlucj/T3BrapiHelpers Found [30m[48;5;249m 11 [49m[39m deps for [30m[48;5;249m 1/1 [49m[39m pkgs [⠼] Resolving standard (CRAN/BioC) packages                                                                             
-#> [36mℹ[39m No downloads are needed
-#>  Installing...              [32m✔[39m 1 pkg + 37 deps: kept 38 [38;5;249m[38;5;249m[1.1s][38;5;249m[39m
+#>  Found [30m[48;5;249m 1 [49m[39m deps for [30m[48;5;249m 0/1 [49m[39m pkgs [⠋] Resolving jeanlucj/T3BrapiHelpers Found [30m[48;5;249m 1 [49m[39m deps for [30m[48;5;249m 0/1 [49m[39m pkgs [⠙] Resolving jeanlucj/T3BrapiHelpers Found [30m[48;5;249m 1 [49m[39m deps for [30m[48;5;249m 0/1 [49m[39m pkgs [⠹] Resolving jeanlucj/T3BrapiHelpers Found [30m[48;5;249m 1 [49m[39m deps for [30m[48;5;249m 0/1 [49m[39m pkgs [⠸] Resolving jeanlucj/T3BrapiHelpers Found [30m[48;5;249m 11 [49m[39m deps for [30m[48;5;249m 1/1 [49m[39m pkgs [⠼] Resolving standard (CRAN/BioC) packages                                                                             
+#> [36mℹ[39m No downloads are needed
+#>  Installing...              [32m✔[39m 1 pkg + 37 deps: kept 38 [38;5;249m[38;5;249m[1.1s][38;5;249m[39m
 ```
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 ## Package goals
 
 The main goals of **T3BrapiHelpers** are to:
 
-- simplify common BrAPI queries used in T3 pipelines
-- reduce redundant code going from BrAPI responses to data.frames
-- make exploratory BrAPI work easier from R
+-   simplify common BrAPI queries used in T3 pipelines
+-   reduce redundant code going from BrAPI responses to data.frames
+-   make exploratory BrAPI work easier from R
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 ## Quick start
 
@@ -73,7 +79,7 @@ head(all_trials)
 #> #   common_crop_name <chr>, experimental_design <chr>, create_date <dttm>
 ```
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 ## Typical workflow
 
@@ -104,38 +110,38 @@ nAccPerTrial <- predict_germ |> dplyr::group_by(studyDbId) |>
   dplyr::summarise(nAccInTrial=dplyr::n())
 ```
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 ## Relationship to other tools
 
-- **BrAPI**: This package assumes familiarity with the BrAPI
-  specification and does not attempt to mirror it completely.
+-   **BrAPI**: This package assumes familiarity with the BrAPI specification and
+    does not attempt to mirror it completely.
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 ## Documentation
 
-Full documentation is available at  
+Full documentation is available at\
 <https://jeanlucj.github.io/T3BrapiHelpers/>
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 ## Development status
 
 This package is under active development.
 
-- APIs may change
-- Function names and signatures are not yet stable
-- Feedback and issues are welcome
+-   APIs may change
+-   Function names and signatures are not yet stable
+-   Feedback and issues are welcome
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 ## Contributing
 
-Issues are welcome. Please include a minimal reproducible example when
-reporting bugs.
+Issues are welcome. Please include a minimal reproducible example when reporting
+bugs.
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 ## License
 

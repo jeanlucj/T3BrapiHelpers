@@ -123,8 +123,7 @@ getTrialMetaDataFromTrialVec <- function(study_id_vec, brapiConnection){
 getAllTrialMetaData <- function(brapiConnection, cropName){
 
   ## pull list of all trials from T3
-  trials_search <- brapiConnection$search(
-    "search/studies",
+  trials_search <- brapiConnection$search("studies",
     body = list(commonCropNames = cropName)
   )
 
@@ -132,6 +131,14 @@ getAllTrialMetaData <- function(brapiConnection, cropName){
   trials_df <- trials_search$combined_data |>
     lapply(makeRowFromTrialResult) |>
     dplyr::bind_rows() |>
+    dplyr::mutate(
+      startDate = as.POSIXct(
+        startDate, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"
+      ),
+      endDate = as.POSIXct(
+        endDate, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"
+      )
+    ) |>
     janitor::clean_names()
 
   return(trials_df)
@@ -256,9 +263,6 @@ getTraitsFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
 # locations, so I have to filter after
 getLatLongElevFromLocationVec <- function(loc_vec, brapiConnection,
                                           id_or_name="name"){
-  #loc_search <- brapiConnection$search("locations", body=list(
-  #  locationName = loc_vec
-  #))
   locSearchToRow <- function(locList){
     coords <- unlist(locList$coordinates$geometry$coordinates)
 
@@ -272,14 +276,17 @@ getLatLongElevFromLocationVec <- function(loc_vec, brapiConnection,
     )
   }
 
-  loc_search <- brapiConnection$search("locations")$combined_data
+  if (id_or_name == "name"){
+    loc_search <- brapiConnection$search("locations",
+                                         body=list(locationNames = loc_vec))
+  } else{
+    loc_search <- brapiConnection$search("locations",
+                                         body=list(locationDbIds = loc_vec))
+  }
+  loc_search <- loc_search$combined_data
 
   loc_df <- lapply(loc_search, locSearchToRow) |>
     dplyr::bind_rows()
 
-  if (id_or_name == "name"){
-    return(dplyr::filter(loc_df, locationName %in% loc_vec))
-  } else{
-    return(dplyr::filter(loc_df, locationDbId %in% loc_vec))
-  }
+  return(loc_df)
 }
