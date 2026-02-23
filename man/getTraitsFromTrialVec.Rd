@@ -7,7 +7,7 @@
 getTraitsFromTrialVec(
   study_id_vec,
   brapiConnection,
-  namesOrIds = "names",
+  id_or_name = "name",
   verbose = F
 )
 }
@@ -18,7 +18,7 @@ to query.}
 \item{brapiConnection}{A BrAPI connection object, typically created by
 \code{BrAPI::createBrAPIConnection()}, with \code{$search()} method.}
 
-\item{namesOrIds}{A string. If "names" return the names of the traits else
+\item{id_or_name}{A string. If "name" return the names of the traits else
 return the trait DB IDs.}
 
 \item{verbose}{A logical. If TRUE a lot of info on the traits in the studies

@@ -4,14 +4,14 @@
 \alias{getAllTrialMetaData}
 \title{Retrieve metadata on all trials for a given crop}
 \usage{
-getAllTrialMetaData(brapiConnection, cropName)
+getAllTrialMetaData(brapiConnection, crop_name)
 }
 \arguments{
 \item{brapiConnection}{A BrAPI connection object, typically created by
 \code{BrAPI::createBrAPIConnection()},
 with \code{$search()} method available.}
 
-\item{cropName}{A character string giving the BrAPI \code{commonCropName}
+\item{crop_name}{A character string giving the BrAPI \code{commonCropName}
 to search for (e.g. \code{"wheat"}).}
 }
 \value{

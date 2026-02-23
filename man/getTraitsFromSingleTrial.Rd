@@ -17,8 +17,8 @@ process.}
 }
 \value{
 A data frame of traits for the given trial, with one row per trait
-Columns include \code{observationVariableDbId} and
-\code{observationVariableName}. If no result is found, not sure what
+Columns include \code{observationVariable_db_id} and
+\code{observation_variable_name}. If no result is found, not sure what
 happens...
 }
 \description{

@@ -25,9 +25,10 @@ germplasm metadata for a vector of trial IDs.
 }
 \examples{
 \dontrun{
-brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+brapi_conn <- BrAPI::getBrAPIConnection("T3/Wheat")
 
-all_germ <- getGermplasmFromTrialVec(c("8128", "9421"), brapiConn)
+all_germ <- T3BrapiHelpers::getGermplasmFromTrialVec(
+  c("10673", "10677"), brapi_conn)
 all_germ
 }
 

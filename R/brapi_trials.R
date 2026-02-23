@@ -8,8 +8,8 @@
 #'   \code{/studies} endpoint, typically \code{brapiConnection$get("studies/ID")$content$result}.
 #'
 #' @return A one-row \code{data.frame} with columns such as
-#'   \code{studyDbId}, \code{studyName}, \code{studyType},
-#'   \code{studyDescription}, \code{locationName}, \code{trialDbID},
+#'   \code{study_db_id}, \code{studyName}, \code{studyType},
+#'   \code{studyDescription}, \code{locationName}, \code{trial_db_id},
 #'   \code{startDate}, \code{endDate}, \code{programName},
 #'   \code{commonCropName}, and \code{experimentalDesign}.
 #'
@@ -18,23 +18,23 @@
 #'
 makeRowFromTrialResult <- function(tr){
   toRet <- tibble::tibble(
-    studyDbId = tr$studyDbId %||% NA_integer_,
-    studyName = tr$studyName %||% NA_character_,
-    studyType = tr$studyType %||% NA_character_,
-    studyDescription = tr$studyDescription %||% NA_character_,
-    locationName = tr$locationName %||% NA_character_,
-    trialDbID = tr$trialDbId %||% NA_integer_,
-    startDate = tr$startDate %||% NA,
-    endDate = tr$endDate %||% NA,
-    programName = tr$additionalInfo$programName %||% NA_character_,
-    commonCropName = tr$commonCropName %||% NA_character_,
-    experimentalDesign = tr$experimentalDesign$description,
-    createDate = tr$additionalInfo$createDate %||% NA
+    study_db_id = tr$studyDbId %||% NA_integer_,
+    study_name = tr$studyName %||% NA_character_,
+    study_type = tr$studyType %||% NA_character_,
+    study_description = tr$studyDescription %||% NA_character_,
+    location_name = tr$locationName %||% NA_character_,
+    trial_db_id = tr$trialDbId %||% NA_integer_,
+    start_date = tr$startDate %||% NA,
+    end_date = tr$endDate %||% NA,
+    program_name = tr$additionalInfo$programName %||% NA_character_,
+    common_crop_name = tr$commonCropName %||% NA_character_,
+    experimental_design = tr$experimentalDesign$description,
+    create_date = tr$additionalInfo$createDate %||% NA
   )
   toRet <- toRet |> dplyr::mutate(
-    startDate = as.POSIXct(startDate, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
-    endDate = as.POSIXct(endDate, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
-    createDate = as.POSIXct(createDate, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+    start_date = as.POSIXct(start_date, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+    end_date = as.POSIXct(end_date, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+    create_date = as.POSIXct(create_date, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
   )
   return(toRet)
 }
@@ -88,7 +88,7 @@ getTrialMetaDataFromTrialVec <- function(study_id_vec, brapiConnection){
     ) |>
     janitor::clean_names()
 
-  return(trials_df)
+  return(trials_df |> janitor::clean_names())
 }
 
 #' Retrieve metadata on all trials for a given crop
@@ -100,7 +100,7 @@ getTrialMetaDataFromTrialVec <- function(study_id_vec, brapiConnection){
 #' @param brapiConnection A BrAPI connection object, typically created by
 #'   \code{BrAPI::createBrAPIConnection()},
 #'   with \code{$search()} method available.
-#' @param cropName A character string giving the BrAPI \code{commonCropName}
+#' @param crop_name A character string giving the BrAPI \code{commonCropName}
 #'   to search for (e.g. \code{"wheat"}).
 #'
 #' @return A tibble-like data frame with one row per trial, containing
@@ -120,11 +120,11 @@ getTrialMetaDataFromTrialVec <- function(study_id_vec, brapiConnection){
 #' }
 #'
 #' @export
-getAllTrialMetaData <- function(brapiConnection, cropName){
+getAllTrialMetaData <- function(brapiConnection, crop_name){
 
   ## pull list of all trials from T3
   trials_search <- brapiConnection$search("studies",
-    body = list(commonCropNames = cropName)
+    body = list(commonCropNames = crop_name)
   )
 
   # Compile the BrAPI results into a data frame
@@ -141,7 +141,7 @@ getAllTrialMetaData <- function(brapiConnection, cropName){
     ) |>
     janitor::clean_names()
 
-  return(trials_df)
+  return(trials_df |> janitor::clean_names())
 }
 
 #' Retrieve what traits were measured for a set of trials by study IDs
@@ -154,7 +154,7 @@ getAllTrialMetaData <- function(brapiConnection, cropName){
 #'   to query.
 #' @param brapiConnection A BrAPI connection object, typically created by
 #'   \code{BrAPI::createBrAPIConnection()}, with \code{$search()} method.
-#' @param namesOrIds A string. If "names" return the names of the traits else
+#' @param id_or_name A string. If "name" return the names of the traits else
 #'   return the trait DB IDs.
 #' @param verbose A logical. If TRUE a lot of info on the traits in the studies
 #'   else a purrr progress bar
@@ -173,7 +173,7 @@ getAllTrialMetaData <- function(brapiConnection, cropName){
 #'
 #' @export
 getTraitsFromTrialVec <- function(study_id_vec, brapiConnection,
-                                  namesOrIds="names", verbose=F){
+                                  id_or_name="name", verbose=F){
   # make tibbles with names and ids for traits in each study
   trialTraitsList <- purrr::map(study_id_vec,
                                 getTraitsFromSingleTrial,
@@ -181,12 +181,15 @@ getTraitsFromTrialVec <- function(study_id_vec, brapiConnection,
                                 verbose=verbose,
                                 .progress=!verbose)
   # Compile a tibble with either names or ids in one cell
-  namesOrIds <- ifelse(namesOrIds == "names", 2, 1)
+  id_or_name <- ifelse(id_or_name == "name", 2, 1)
   makeStudyIDrow <- function(idx){
     return(tibble::tibble(study_id=study_id_vec[idx],
-                  traits=list(trialTraitsList[[idx]][, namesOrIds])))
+                  traits=list(trialTraitsList[[idx]][, id_or_name])))
   }
-  return(lapply(1:length(study_id_vec), makeStudyIDrow) |> dplyr::bind_rows())
+
+  return(lapply(1:length(study_id_vec), makeStudyIDrow) |>
+           dplyr::bind_rows() |>
+           janitor::clean_names())
 }
 
 #' Get traits measured from a single trial via BrAPI
@@ -201,8 +204,8 @@ getTraitsFromTrialVec <- function(study_id_vec, brapiConnection,
 #'   process.
 #'
 #' @return A data frame of traits for the given trial, with one row per trait
-#'   Columns include \code{observationVariableDbId} and
-#'   \code{observationVariableName}. If no result is found, not sure what
+#'   Columns include \code{observationVariable_db_id} and
+#'   \code{observation_variable_name}. If no result is found, not sure what
 #'   happens...
 #'
 #' @importFrom dplyr bind_rows
@@ -221,8 +224,8 @@ getTraitsFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
   get_fields_from_data <- function(data_list){
     if (verbose) cat("Retrieved metadata on",
                      data_list$observationVariableName, "\n")
-    return(tibble(observationVariableDbId=data_list$observationVariableDbId,
-                  observationVariableName=data_list$observationVariableName))
+    return(tibble(observation_variable_db_id=data_list$observationVariableDbId,
+                  observation_variable_name=data_list$observationVariableName))
   }
 
   search_result <- brapiConnection$search("variables",
@@ -230,7 +233,9 @@ getTraitsFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
 
   # Make a data.frame from the combined data
   return(lapply(search_result$combined_data, get_fields_from_data) |>
-           dplyr::bind_rows() |> dplyr::distinct())
+           dplyr::bind_rows() |>
+           dplyr::distinct() |>
+           janitor::clean_names())
 }
 
 #' Get location info from a vector of locations via BrAPI
@@ -267,8 +272,8 @@ getLatLongElevFromLocationVec <- function(loc_vec, brapiConnection,
     coords <- unlist(locList$coordinates$geometry$coordinates)
 
     dplyr::tibble(
-      locationDbId = locList$locationDbId %||% NA,
-      locationName = locList$locationName %||% NA,
+      location_db_id = locList$locationDbId %||% NA,
+      location_name = locList$locationName %||% NA,
       abbreviation = locList$abbreviation %||% NA,
       latitude = ifelse(!is.null(coords) & length(coords) >= 2, coords[2], NA),
       longitude = ifelse(!is.null(coords) & length(coords) >= 1, coords[1], NA),
@@ -288,5 +293,5 @@ getLatLongElevFromLocationVec <- function(loc_vec, brapiConnection,
   loc_df <- lapply(loc_search, locSearchToRow) |>
     dplyr::bind_rows()
 
-  return(loc_df)
+  return(loc_df |> janitor::clean_names())
 }

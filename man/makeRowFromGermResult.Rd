@@ -14,8 +14,8 @@ germplasm search.}
 germplasm in the current context.}
 }
 \value{
-A one-row \code{data.frame} with columns \code{studyDbId},
-\code{germplasmDbId}, \code{germplasmName}, and \code{synonym}.
+A one-row \code{data.frame} with columns \code{study_db_id},
+\code{germplasm_db_id}, \code{germplasmName}, and \code{synonym}.
 }
 \description{
 Takes a single germplasm object from a BrAPI germplasm search and converts

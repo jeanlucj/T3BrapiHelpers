@@ -12,8 +12,8 @@ makeRowFromTrialResult(tr)
 }
 \value{
 A one-row \code{data.frame} with columns such as
-\code{studyDbId}, \code{studyName}, \code{studyType},
-\code{studyDescription}, \code{locationName}, \code{trialDbID},
+\code{study_db_id}, \code{studyName}, \code{studyType},
+\code{studyDescription}, \code{locationName}, \code{trial_db_id},
 \code{startDate}, \code{endDate}, \code{programName},
 \code{commonCropName}, and \code{experimentalDesign}.
 }

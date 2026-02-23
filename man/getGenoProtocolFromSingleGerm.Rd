@@ -16,7 +16,7 @@ getGenoProtocolFromSingleGerm(germ_id, brapiConnection, verbose = F)
 }
 \value{
 A tibble with a single row containing
-\code{germplasmDbId}, \code{genoProtocolDbId}, and \code{genoProtocolName}.
+\code{germplasm_db_id}, \code{genoProtocol_db_id}, and \code{genoProtocolName}.
 The genotyping protocol columns are list columns, potentially containing
 multiple protocol IDs/names.
 }

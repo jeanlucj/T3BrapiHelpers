@@ -17,7 +17,7 @@ process.}
 }
 \value{
 A data frame of germplasm metadata for the given trial, with one
-row per germplasm. Columns include \code{studyDbId}, \code{germplasmDbId},
+row per germplasm. Columns include \code{study_db_id}, \code{germplasm_db_id},
 \code{germplasmName}, and \code{synonym}. If no result is found, not sure
 what happens.
 }
