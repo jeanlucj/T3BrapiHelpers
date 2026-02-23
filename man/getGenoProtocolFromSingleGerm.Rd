@@ -27,9 +27,9 @@ specific germplasm
 }
 \examples{
 \dontrun{
-brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+brapi_conn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
-winner_geno_protocols <- getGenoProtocolFromGermVec("1284387", brapiConn)
+winner_geno_protocols <- getGenoProtocolFromGermVec("1284387", brapi_conn)
 winner_geno_protocols
 }
 

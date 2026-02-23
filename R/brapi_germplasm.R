@@ -139,9 +139,9 @@ getGermplasmFromTrialVec <- function(study_id_vec, brapiConnection, verbose=F){
 #'
 #' @examples
 #' \dontrun{
-#' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+#' brapi_conn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
-#' winner_geno_protocols <- getGenoProtocolFromGermVec("1284387", brapiConn)
+#' winner_geno_protocols <- getGenoProtocolFromGermVec("1284387", brapi_conn)
 #' winner_geno_protocols
 #' }
 #'
@@ -196,10 +196,10 @@ getGenoProtocolFromSingleGerm <- function(germ_id, brapiConnection, verbose=F){
 #'
 #' @examples
 #' \dontrun{
-#' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+#' brapi_conn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
 #' germ_geno_protocols <- getGenoProtocolFromGermVec(
-#'   c("1284387", "1382716", "1415479"), brapiConn)
+#'   c("1284387", "1382716", "1415479"), brapi_conn)
 #' germ_geno_protocols
 #' }
 #'
@@ -234,9 +234,9 @@ getGenoProtocolFromGermVec <- function(germ_id_vec, brapiConnection, verbose=F) 
 #'
 #' @examples
 #' \dontrun{
-#' brapiConn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
+#' brapi_conn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
-#' trial_df <- getTrialFromSingleGermplasm("1284387", brapiConn)
+#' trial_df <- getTrialFromSingleGermplasm("1284387", brapi_conn)
 #' trial_df
 #' }
 #'
@@ -279,9 +279,9 @@ getTrialFromSingleGermplasm <- function(germplasm_id, brapiConnection,
 #'
 #' @examples
 #' \dontrun{
-#' brapiConn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
+#' brapi_conn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
-#' all_trial <- getTrialFromGermplasmVec(c("1284387", "1382716"), brapiConn)
+#' all_trial <- getTrialFromGermplasmVec(c("1284387", "1382716"), brapi_conn)
 #' all_trial
 #' }
 #'

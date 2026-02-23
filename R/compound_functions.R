@@ -12,7 +12,7 @@
 #'   common for the study to be included in the response
 #'
 #' @return A tibble with one row per trial
-#'   other_studies: the studyDbId and
+#'   other_studies: the study_db_id and
 #'   n: the number of germplasms in common with the focal study
 #'
 #' @importFrom T3BrapiHelpers getGermplasmFromSingleTrial getTrialFromGermplasmVec
@@ -29,17 +29,17 @@
 #' }
 #'
 #' @export
-find_other_studies_evaluating_same_germplasm <- function(study_id, brapiConn,
+find_other_studies_evaluating_same_germplasm <- function(study_id, brapi_conn,
                                                          min_germ_common=5){
   this_study_germ <-
-    T3BrapiHelpers::getGermplasmFromSingleTrial(study_id, brapiConn)
+    T3BrapiHelpers::getGermplasmFromSingleTrial(study_id, brapi_conn)
 
-  other_studies <- this_study_germ$germplasmDbId |>
-    T3BrapiHelpers::getTrialFromGermplasmVec(brapiConn)
+  other_studies <- this_study_germ$germplasm_db_id |>
+    T3BrapiHelpers::getTrialFromGermplasmVec(brapi_conn)
 
-  other_studies_tabyl <- janitor::tabyl(other_studies$studyDbId) |>
+  other_studies_tabyl <- janitor::tabyl(other_studies$study_db_id) |>
     dplyr::select(-percent) |>
-    dplyr::rename(other_studies=`other_studies$studyDbId`) |>
+    dplyr::rename(other_studies=`other_studies$study_db_id`) |>
     dplyr::filter(other_studies != study_id) |>
     dplyr::filter(n >= min_germ_common)
 

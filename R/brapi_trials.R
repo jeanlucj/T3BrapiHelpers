@@ -59,10 +59,10 @@ makeRowFromTrialResult <- function(tr){
 #'
 #' @examples
 #' \dontrun{
-#' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+#' brapi_conn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
 #' # Retrieve metadata for two trials
-#' df <- getTrialMetaDataFromTrialVec(c("8128", "9421"), brapiConn)
+#' df <- getTrialMetaDataFromTrialVec(c("8128", "9421"), brapi_conn)
 #' df
 #' }
 #'
@@ -112,10 +112,10 @@ getTrialMetaDataFromTrialVec <- function(study_id_vec, brapiConnection){
 #'
 #' @examples
 #' \dontrun{
-#' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+#' brapi_conn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
 #' # Retrieve trial metadata for "Wheat"
-#' all_trials <- getAllTrialMetaData(brapiConn, "Wheat")
+#' all_trials <- getAllTrialMetaData(brapi_conn, "Wheat")
 #' all_trials
 #' }
 #'
@@ -165,9 +165,9 @@ getAllTrialMetaData <- function(brapiConnection, crop_name){
 #'
 #' @examples
 #' \dontrun{
-#' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+#' brapi_conn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
-#' traits <- getTraitsFromTrialVec(c("8128", "9421"), brapiConn)
+#' traits <- getTraitsFromTrialVec(c("8128", "9421"), brapi_conn)
 #' traits
 #' }
 #'
@@ -212,9 +212,9 @@ getTraitsFromTrialVec <- function(study_id_vec, brapiConnection,
 #'
 #' @examples
 #' \dontrun{
-#' brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+#' brapi_conn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
-#' traits_df <- getTraitsFromSingleTrial("8128", brapiConn)
+#' traits_df <- getTraitsFromSingleTrial("8128", brapi_conn)
 #' traits_df
 #' }
 #'
@@ -257,9 +257,9 @@ getTraitsFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
 #'
 #' @examples
 #' \dontrun{
-#' brapiConn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
+#' brapi_conn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
 #'
-#' locs_df <- getLatLongElevFromLocationVec(c("31", "143"), brapiConn)
+#' locs_df <- getLatLongElevFromLocationVec(c("31", "143"), brapi_conn)
 #' locs_df
 #' }
 #'

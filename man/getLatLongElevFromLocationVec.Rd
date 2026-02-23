@@ -26,9 +26,9 @@ returns a data frame of lat, long, and elevation values for those locations
 }
 \examples{
 \dontrun{
-brapiConn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
+brapi_conn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
 
-locs_df <- getLatLongElevFromLocationVec(c("31", "143"), brapiConn)
+locs_df <- getLatLongElevFromLocationVec(c("31", "143"), brapi_conn)
 locs_df
 }
 

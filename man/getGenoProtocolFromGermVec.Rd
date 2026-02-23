@@ -24,10 +24,10 @@ Wrapper for getGenoProtocolFromSingleGerm.
 }
 \examples{
 \dontrun{
-brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+brapi_conn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
 germ_geno_protocols <- getGenoProtocolFromGermVec(
-  c("1284387", "1382716", "1415479"), brapiConn)
+  c("1284387", "1382716", "1415479"), brapi_conn)
 germ_geno_protocols
 }
 

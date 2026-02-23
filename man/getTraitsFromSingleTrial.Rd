@@ -27,9 +27,9 @@ returns a data frame of traits and their DbIds measured in that trial
 }
 \examples{
 \dontrun{
-brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+brapi_conn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
-traits_df <- getTraitsFromSingleTrial("8128", brapiConn)
+traits_df <- getTraitsFromSingleTrial("8128", brapi_conn)
 traits_df
 }
 

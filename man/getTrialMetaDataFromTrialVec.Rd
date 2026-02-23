@@ -25,10 +25,10 @@ endpoint for each and compile a tidy data frame of trial metadata.
 }
 \examples{
 \dontrun{
-brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+brapi_conn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
 # Retrieve metadata for two trials
-df <- getTrialMetaDataFromTrialVec(c("8128", "9421"), brapiConn)
+df <- getTrialMetaDataFromTrialVec(c("8128", "9421"), brapi_conn)
 df
 }
 

@@ -34,9 +34,9 @@ study_id_vec
 }
 \examples{
 \dontrun{
-brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+brapi_conn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
-traits <- getTraitsFromTrialVec(c("8128", "9421"), brapiConn)
+traits <- getTraitsFromTrialVec(c("8128", "9421"), brapi_conn)
 traits
 }
 

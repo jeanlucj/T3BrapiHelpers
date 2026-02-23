@@ -6,22 +6,22 @@
 \usage{
 find_other_studies_evaluating_same_germplasm(
   study_id,
-  brapiConn,
+  brapi_conn,
   min_germ_common = 5
 )
 }
 \arguments{
 \item{study_id}{A BrAPI study IDs to query}
 
-\item{brapiConn}{A BrAPI connection object, created by
-\code{BrAPI::createBrAPIConnection()}}
-
 \item{min_germ_common}{An integer of the minimum number of germplasms in
 common for the study to be included in the response}
+
+\item{brapiConn}{A BrAPI connection object, created by
+\code{BrAPI::createBrAPIConnection()}}
 }
 \value{
 A tibble with one row per trial
-other_studies: the studyDbId and
+other_studies: the study_db_id and
 n: the number of germplasms in common with the focal study
 }
 \description{

@@ -26,10 +26,10 @@ results into a trial metadata data frame.
 }
 \examples{
 \dontrun{
-brapiConn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
+brapi_conn <- BrAPI::createBrAPIConnection("wheat-sandbox.triticeaetoolbox.org", is_breedbase = TRUE)
 
 # Retrieve trial metadata for "Wheat"
-all_trials <- getAllTrialMetaData(brapiConn, "Wheat")
+all_trials <- getAllTrialMetaData(brapi_conn, "Wheat")
 all_trials
 }
 

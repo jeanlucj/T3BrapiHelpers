@@ -26,9 +26,9 @@ returns a data frame of trials associated with that germplasm
 }
 \examples{
 \dontrun{
-brapiConn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
+brapi_conn <- BrAPI::createBrAPIConnection("wheat.triticeaetoolbox.org", is_breedbase = TRUE)
 
-trial_df <- getTrialFromSingleGermplasm("1284387", brapiConn)
+trial_df <- getTrialFromSingleGermplasm("1284387", brapi_conn)
 trial_df
 }
 
