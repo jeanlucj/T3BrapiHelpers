@@ -60,9 +60,9 @@ makeRowFromGermResult <- function(gr, study_id){
 getGermplasmFromSingleTrial <- function(study_id, brapiConnection, verbose=F){
 
   get_fields_from_data <- function(data_list){
-    if (verbose) cat("Retrieved metadata on", data_list$germplasm_name, "\n")
+    if (verbose) cat("Retrieved metadata on", data_list$germplasmName, "\n")
     return(tibble(study_db_id=study_id,
-                  germplasm_db_id=data_list$germplasm_db_id,
+                  germplasm_db_id=data_list$germplasmDbId,
                   germplasm_name=data_list$germplasmName,
                   synonyms=data_list$synonyms |> unlist() |> list(),
                   pedigree=data_list$pedigree))

@@ -78,14 +78,6 @@ getTrialMetaDataFromTrialVec <- function(study_id_vec, brapiConnection){
   trials_df <- trials_list |>
     lapply(makeRowFromTrialResult) |>
     dplyr::bind_rows() |>
-    dplyr::mutate(
-      startDate = as.POSIXct(
-        startDate, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"
-      ),
-      endDate = as.POSIXct(
-        endDate, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"
-      )
-    ) |>
     janitor::clean_names()
 
   return(trials_df |> janitor::clean_names())
@@ -131,14 +123,6 @@ getAllTrialMetaData <- function(brapiConnection, crop_name){
   trials_df <- trials_search$combined_data |>
     lapply(makeRowFromTrialResult) |>
     dplyr::bind_rows() |>
-    dplyr::mutate(
-      startDate = as.POSIXct(
-        startDate, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"
-      ),
-      endDate = as.POSIXct(
-        endDate, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"
-      )
-    ) |>
     janitor::clean_names()
 
   return(trials_df |> janitor::clean_names())
@@ -184,7 +168,7 @@ getTraitsFromTrialVec <- function(study_id_vec, brapiConnection,
   id_or_name <- ifelse(id_or_name == "name", 2, 1)
   makeStudyIDrow <- function(idx){
     return(tibble::tibble(study_id=study_id_vec[idx],
-                  traits=list(trialTraitsList[[idx]][, id_or_name])))
+                          traits=list(trialTraitsList[[idx]][, id_or_name])))
   }
 
   return(lapply(1:length(study_id_vec), makeStudyIDrow) |>

@@ -6,7 +6,7 @@
 #'   focal study ID
 #'
 #' @param study_id A BrAPI study IDs to query
-#' @param brapiConn A BrAPI connection object, created by
+#' @param brapi_conn A BrAPI connection object, created by
 #'   \code{BrAPI::createBrAPIConnection()}
 #' @param min_germ_common An integer of the minimum number of germplasms in
 #'   common for the study to be included in the response
