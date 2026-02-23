@@ -247,8 +247,8 @@ getTrialFromSingleGermplasm <- function(germplasm_id, brapiConnection,
   get_fields_from_data <- function(data_list){
     if (verbose) cat("Retrieved metadata on", data_list$studyName, "\n")
     return(tibble::tibble(germplasm_db_id=germplasm_id,
-                  study_db_id=data_list$study_db_id,
-                  studyName=data_list$studyName))
+                  study_db_id=data_list$studyDbId,
+                  study_name=data_list$studyName))
   }
 
   search_result <- brapiConnection$search("studies",
